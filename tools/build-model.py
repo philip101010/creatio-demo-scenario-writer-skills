@@ -23,6 +23,7 @@ snapshot that breaks the assumption fails loudly instead of losing data.
 
 import csv
 import gzip
+import io
 import os
 import sys
 
@@ -54,13 +55,21 @@ def cell(v):
 
 
 def write_tsv(path, header, rows):
-    with gzip.open(path, "wt", encoding="utf-8", newline="", compresslevel=9) as fh:
+    # mtime=0 and an empty embedded filename keep the output byte-identical for
+    # identical input. Without them every rebuild rewrites the gzip header, so
+    # an unchanged model still shows up as a diff in git.
+    raw = open(path, "wb")
+    gz = gzip.GzipFile(filename="", mode="wb", fileobj=raw, compresslevel=9,
+                       mtime=0)
+    with io.TextIOWrapper(gz, encoding="utf-8", newline="") as fh:
         w = csv.writer(fh, delimiter="\t", lineterminator="\n")
         w.writerow(header)
         n = 0
         for r in rows:
             w.writerow(r)
             n += 1
+    gz.close()
+    raw.close()
     return n, os.path.getsize(path)
 
 
