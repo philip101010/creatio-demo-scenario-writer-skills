@@ -12,11 +12,22 @@ library is needed; the assets are pre-compiled by tools/build-model.py.
 
 Usage
 -----
+  sh scripts/model.sh check  <item> [<item> ...] | --file <list> [--banking]
   sh scripts/model.sh object <ObjectName|Caption> [--all] [--banking]
   sh scripts/model.sh field  <substring> [--object <ObjectName|Caption>] [--banking]
   sh scripts/model.sh lookup <LookupObject|Caption> [--banking]
   sh scripts/model.sh sections [--banking]
   sh scripts/model.sh search <substring> [--banking]
+
+`check` is the one to reach for while verifying a scenario: it answers a whole
+list in one call, one line per item, instead of a field dump per name.
+
+  sh scripts/model.sh check Case Case.PriorityId "CaseStatus=New" Order.labKind
+  sh scripts/model.sh check --file spec.txt --banking     ('-' reads stdin)
+
+  Item grammar:  Account            an object
+                 Case.PriorityId    a field on an object
+                 CaseStatus=New     a value of a lookup
 
 Examples
 --------
@@ -32,11 +43,13 @@ Exit codes
   0  verified: it exists in this snapshot
   1  NOT verified: it is absent, or present but empty in this snapshot.
      Either way you may not write a build-spec line about it. Raise an ?OPEN.
+     For `check`, 1 means at least one item of the list was not verified.
   2  usage error (bad or missing argument)
 """
 
 import argparse
 import csv
+import difflib
 import gzip
 import os
 import sys
@@ -304,6 +317,107 @@ def cmd_search(m, substring):
     return 0
 
 
+def parse_item(text):
+    """One check item -> (kind, object, detail).
+
+    `Account`            an object
+    `Case.PriorityId`    a field on an object
+    `CaseStatus=New`     a value of a lookup
+
+    `=` is read first, so a lookup value may contain dots; object and field
+    names contain neither character.
+    """
+    text = text.strip()
+    if not text:
+        return None
+    if "=" in text:
+        obj, value = text.split("=", 1)
+        return ("value", obj.strip(), value.strip())
+    if "." in text:
+        obj, field = text.split(".", 1)
+        return ("field", obj.strip(), field.strip())
+    return ("object", text, None)
+
+
+def check_one(m, kind, obj, detail):
+    """Verify one item. Returns (ok, note) - note is compact, one line."""
+    meta, _ = resolve_object(m, obj)
+    if meta is None:
+        return False, "no such object in this snapshot"
+    obj_name = meta[0]
+
+    if kind == "object":
+        section = (" -> " + meta[3]) if meta[2] == "Yes" else ", no section"
+        return True, "%s fields%s" % (meta[4], section)
+
+    if kind == "field":
+        names = [r[1] for r in m.fields_of(obj_name)]
+        for row in m.fields_of(obj_name):
+            if norm(row[1]) == norm(detail):
+                # "Lookup (CasePriority)" already names the target; only a
+                # non-lookup type needs it spelled out.
+                target = ("" if row[4] and row[4] in row[2]
+                          else (" -> %s" % row[4] if row[4] else ""))
+                return True, "%s%s%s" % (row[2],
+                                         ", required" if row[3] == "Yes" else "",
+                                         target)
+        # A name in the notes is usually close to the real one - a suffix, a
+        # plural or a typo - so say which field was probably meant.
+        near = [n for n in names if norm(detail) in norm(n)][:3]
+        if not near:
+            near = difflib.get_close_matches(detail, names, n=3, cutoff=0.7)
+        if near:
+            return False, "no such field; closest: %s" % ", ".join(near)
+        return False, "no such field on %s" % obj_name
+
+    values = m.values_of(obj_name)
+    for value in values:
+        if norm(value) == norm(detail):
+            return True, "existing value"
+    if not values:
+        return False, "lookup holds no values in this snapshot"
+    shown = ", ".join(values[:10])
+    if len(values) > 10:
+        shown += ", ... (%d total)" % len(values)
+    return False, "not among: %s" % shown
+
+
+def cmd_check(m, items):
+    """Verify a whole list in one call.
+
+    The scenario is verified name by name, dozens of names per document. Asking
+    one at a time costs a round-trip and a full field dump for each; this asks
+    once and answers in one line per name.
+    """
+    parsed = [parse_item(i) for i in items]
+    parsed = [x for x in parsed if x]
+    if not parsed:
+        print("Nothing to check.")
+        return 2
+
+    width = min(46, max(len(i.strip()) for i in items if i.strip()))
+    missing = 0
+    for kind, obj, detail in parsed:
+        ok, note = check_one(m, kind, obj, detail)
+        if detail is None:
+            label = obj
+        elif kind == "field":
+            label = "%s.%s" % (obj, detail)
+        else:
+            label = "%s=%s" % (obj, detail)
+        if not ok:
+            missing += 1
+        print("%-8s %-*s %s" % ("OK" if ok else "MISSING", width, label, note))
+
+    print()
+    print("%d checked, %d verified, %d NOT verified."
+          % (len(parsed), len(parsed) - missing, missing))
+    if missing:
+        print("A missing lookup value or a missing simple column is normally a "
+              "build-spec line, not an ?OPEN - see best-practices.md section 2.")
+    return 1 if missing else 0
+
+
 # ---------------------------------------------------------------- main
 
 
@@ -312,21 +426,40 @@ def run():
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     p.add_argument("command",
-                   choices=["object", "field", "lookup", "sections", "search"])
-    p.add_argument("value", nargs="?", default=None)
+                   choices=["object", "field", "lookup", "sections", "search",
+                            "check"])
+    p.add_argument("value", nargs="*", default=[])
     p.add_argument("--object", dest="obj", default=None,
                    help="restrict a field search to one object (field command only)")
     p.add_argument("--all", action="store_true",
                    help="include system fields in the object dump (object only)")
+    p.add_argument("--file", dest="file", default=None,
+                   help="read check items from a file, one per line ('-' for stdin)")
     p.add_argument("--banking", action="store_true",
                    help="use the banking / finserv snapshot")
     a = p.parse_args()
 
-    if a.command == "sections":
-        if a.value:
-            p.error("'sections' takes no value (got %r)" % a.value)
-    elif not a.value:
-        p.error("command %r needs a value" % a.command)
+    items = list(a.value)
+    if a.command == "check":
+        if a.file:
+            try:
+                text = sys.stdin.read() if a.file == "-" else \
+                    open(a.file, encoding="utf-8").read()
+            except OSError as exc:
+                p.error("cannot read %r: %s" % (a.file, exc.strerror or exc))
+            # blank lines and # comments let the list carry its own structure
+            items += [l for l in (x.strip() for x in text.splitlines())
+                      if l and not l.startswith("#")]
+        if not items:
+            p.error("'check' needs items, or --file with a list of them")
+    elif a.file:
+        p.error("--file applies only to the 'check' command")
+    elif a.command == "sections":
+        if items:
+            p.error("'sections' takes no value (got %r)" % items[0])
+    elif len(items) != 1:
+        p.error("command %r needs exactly one value (got %d)"
+                % (a.command, len(items)))
 
     if a.obj and a.command != "field":
         p.error("--object applies only to the 'field' command")
@@ -334,15 +467,18 @@ def run():
         p.error("--all applies only to the 'object' command")
 
     m = load(a.banking)
-    if a.command == "object":
-        return cmd_object(m, a.value, a.all)
-    if a.command == "field":
-        return cmd_field(m, a.value, a.obj)
-    if a.command == "lookup":
-        return cmd_lookup(m, a.value)
+    if a.command == "check":
+        return cmd_check(m, items)
     if a.command == "sections":
         return cmd_sections(m)
-    return cmd_search(m, a.value)
+    value = items[0]
+    if a.command == "object":
+        return cmd_object(m, value, a.all)
+    if a.command == "field":
+        return cmd_field(m, value, a.obj)
+    if a.command == "lookup":
+        return cmd_lookup(m, value)
+    return cmd_search(m, value)
 
 
 def main():

@@ -167,7 +167,7 @@ If a line could belong to both, it belongs here only.
 - Bullets under the group headings shown in the template above, in that order.
   Omit a group that has nothing in it; never reorder them.
 - Every object, field and lookup value verified against the snapshot with
-  `scripts/model.py`. Mark each as:
+  `scripts/model.sh check`. Mark each as:
   - `(existing field)` — present in the snapshot, used as is.
   - `(existing lookup)` — with the rename convention:
     `Status (existing lookup): rename value "New" to "Prospect", keep all other values as is.`
@@ -245,3 +245,35 @@ Reject your own draft if it contains any of these, and rewrite:
 A five-use-case scenario is roughly 600–900 words of body text plus tables.
 If you are past that, you are duplicating. The single most common cause is a
 build-spec line restating a happy-path step. Check that first.
+
+---
+
+## 9. Delivery
+
+One Markdown file, UTF-8, written to the working directory:
+
+```
+<client>-demo-scenario-v<n>.md
+```
+
+Lower case, hyphens for spaces in the client name —
+`northwind-demo-scenario-v1.md`. The version in the file name is the version on
+the second line of the document, and a revision after the consultant's comments
+increments both. Never overwrite the previous version; the consultant compares
+them.
+
+Markdown, so the document diffs, reviews and pastes anywhere. Use only what this
+contract already uses:
+
+- `#` for the title, `##` for the five sections, `###` for a use case.
+- Pipe tables for the Demo card, the use case index, roles and acceptance. Every
+  table gets its header separator row; no merged cells, no nested tables.
+- `**bold**` for the fixed labels inside a use case — `**Wow:**`,
+  `**Happy path**`, `**Build spec**`, `**Data**`, `**Acceptance**`, `**Open**` —
+  and nowhere else. Bold is structure here, not emphasis.
+- Numbered lists for happy-path steps, `-` for every other list.
+- Backticks for a field, object or lookup name that could be read as prose.
+
+No raw HTML, no images, no footnotes, no collapsible blocks, no colour and no
+highlighting. A doubt that a highlight would have carried is an `?OPEN`, which
+is the only form a question takes in this document.

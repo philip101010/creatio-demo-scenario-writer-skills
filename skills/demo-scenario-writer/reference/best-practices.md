@@ -172,7 +172,15 @@ Use the banking model when the client is a bank, an insurer or any financial
 services firm; the general model otherwise. State which one you used in the
 Demo card.
 
-Never open the compiled tables yourself. Query them:
+Never open the compiled tables yourself. Query them. Verifying the draft is
+one batch call — collect every name first, then:
+
+```bash
+sh scripts/model.sh check --file spec.txt    # the whole list, one line each
+```
+
+Items are `Account`, `Case.PriorityId`, `CaseStatus=New`. Exit code 1 means at
+least one did not verify. The single-name commands are for exploring:
 
 ```bash
 sh scripts/model.sh object Case              # all fields of an object

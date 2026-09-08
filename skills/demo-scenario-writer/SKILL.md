@@ -88,14 +88,41 @@ use case needs it. This is what removes the dependencies between use cases.
 
 ### Step 3 — Verify
 
-Before writing any build-spec line, check it:
+First write the list. Go through the decomposition and put down every name the
+document is going to assert — each object, each field, each lookup, each lookup
+value — one per line, in a file:
+
+```
+Case
+Case.PriorityId
+CaseStatus=In progress
+Order.labReturnType
+```
+
+Then verify the whole list in one call:
 
 ```bash
-sh scripts/model.sh object Case
-sh scripts/model.sh lookup CaseStatus
+sh scripts/model.sh check --file spec.txt
+```
+
+One line comes back per name: `OK` with the field's type and lookup target, or
+`MISSING` with the closest real name and, for a lookup value, the values that
+are actually there. Exit code 1 means at least one name did not verify.
+
+**The list is the discipline.** A name that never entered it is a name you did
+not verify, and the batch call is what makes verifying all of them cheap enough
+that there is no excuse to skip any: 35 names cost one call instead of 35.
+Extend the file and re-run it whenever the draft grows a new name.
+
+The single-name commands are for exploring, when you do not yet know what to
+put in the list:
+
+```bash
+sh scripts/model.sh search opportunit          # which object is this?
+sh scripts/model.sh object Case                # what fields does it have?
+sh scripts/model.sh lookup CaseStatus          # what values exist?
 sh scripts/model.sh field priority --object Case
-sh scripts/model.sh search opportunit
-sh scripts/model.sh sections
+sh scripts/model.sh sections                   # what has a UI section?
 ```
 
 Add `--banking` for financial services clients.
@@ -107,11 +134,12 @@ beyond it, and locates the snapshots relative to itself. If it reports no
 interpreter, say so and stop; do not write build-spec lines you could not
 verify.
 
-Every object, field, lookup and lookup value gets checked. Exit code 1 means
-**not verified** — absent from the snapshot, or present but empty in it. A
-finding from one snapshot never carries over to the other. Query through the
-commands above; never open the tables in `assets/` yourself, and never open the
-xlsx in `snapshots/` — that is the maintainer's source, 36 000 rows of it.
+Every object, field, lookup and lookup value gets checked. `MISSING` — or exit
+code 1 — means **not verified**: absent from the snapshot, or present but empty
+in it. A finding from one snapshot never carries over to the other. Query
+through the commands above; never open the tables in `assets/` yourself, and
+never open the xlsx in `snapshots/` — that is the maintainer's source, 36 000
+rows of it.
 
 `object` hides the six system columns (`Id`, `CreatedOn/By`, `ModifiedOn/By`,
 `ProcessListeners`) that every object has and no demo spec needs; pass `--all`
@@ -128,8 +156,8 @@ mechanism not on that list is an `?OPEN` for the engineer.
 ### Step 4 — Write
 
 Produce the whole document in one pass, in the exact structure of
-`reference/format.md`. Deliver it as a Word document (`.docx`), or in chat if
-file creation is unavailable.
+`reference/format.md`. Deliver it as one Markdown file — see section 9 of the
+format contract for the file name and what Markdown is allowed in it.
 
 Open questions go in the `Open` part of the use case that needs them. There is no
 collected list at the end of the document; the Open column of the use case index

@@ -28,6 +28,8 @@ exists to remove.
 
 Then just hand Claude the notes — the skill triggers on demo notes, a client
 call summary, a draft demo script or a use-case description for a Creatio demo.
+It answers with an intake checklist, then delivers the scenario as one Markdown
+file named `<client>-demo-scenario-v<n>.md`.
 
 ## What's inside
 
@@ -46,9 +48,21 @@ snapshots/*.xlsx              the raw exports the assets are compiled from
 tools/build-model.py          the compiler (maintainers only)
 ```
 
-`scripts/model.sh` is the verification path — objects, lookups, fields,
-sections, free-text search, with `--banking` selecting the financial-services
-snapshot. Exit code 1 means not verified.
+`scripts/model.sh` is the verification path, and `check` is the command the
+skill leans on: a scenario asserts dozens of names, and asking one at a time
+cost a round-trip and a full field dump each. On a 35-name list, one batch call
+answers in 395 ms and ~600 tokens where the single-name commands took 15 s and
+~11 500.
+
+```bash
+sh scripts/model.sh check Case Case.PriorityId "CaseStatus=New" Order.labKind
+sh scripts/model.sh check --file spec.txt --banking
+```
+
+`OK` carries the field's type and lookup target; `MISSING` carries the closest
+real name, or the values a lookup actually holds. The single-name commands —
+objects, lookups, fields, sections, free-text search, with `--banking` selecting
+the financial-services snapshot — remain for exploring:
 
 ```bash
 sh scripts/model.sh object Case

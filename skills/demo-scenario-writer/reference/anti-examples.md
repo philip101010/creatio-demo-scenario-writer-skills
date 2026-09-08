@@ -155,8 +155,9 @@ every step is what turns 600 words into 7 000.
 
 > **Good** — the step is written for the decided case, with `?OPEN-7` inline, and the question appears in that use case's Open part with an addressee and what it blocks.
 
-A highlight in a Word document is not a question. Nobody owns it and nobody
-answers it.
+A highlight, a bold aside or a bracketed doubt in the prose is not a question.
+Nobody owns it and nobody answers it. Only the Open part of a use case is a
+question, because only there does it carry a number and an addressee.
 
 ### 16. Currency and localisation discovered mid-document
 
