@@ -1,8 +1,8 @@
 {
   "name": "creatio-demo-scenario-writer",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "displayName": "Creatio Demo Scenario Writer",
-  "description": "Turn a solution consultant's free-form demo notes into a build-ready Creatio demo scenario: modular use cases, a single happy path, every object, field and lookup verified against a bundled Creatio object-model snapshot, and genuinely unresolved points raised as addressed open questions instead of invented functionality.",
+  "description": "Rewrite a solution consultant's free-form Creatio demo scenario into two files: a narrative scenario they present from - their use cases, split into phases, with narration in bubbles and every on-screen value carrying its provenance - and an object-model file a coding agent builds from. Closes the step-logic gaps by asking before writing, and loses no detail of the source.",
   "author": {
     "name": "Philip Shatunov SE @Creatio",
     "email": "f.shatunov@creatio.com"

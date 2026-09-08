@@ -1,121 +1,134 @@
 ---
 name: demo-scenario-writer
-description: Turn a solution consultant's free-form demo notes into a build-ready Creatio demo scenario — modular use cases, single happy path, verified against the Creatio object model, with genuinely unresolved points raised as questions inside the use case instead of invented functionality. Use when someone provides demo notes, a client call summary, a draft demo script or a use-case description for a Creatio demo and wants a scenario, demo script or technical spec the solution engineer can build from.
+description: Rewrite a solution consultant's free-form Creatio demo scenario into the format an engineer can build from and a consultant can present from — use cases kept as they wrote them, split into phases, with narration in bubbles and every on-screen value carrying its provenance — plus a separate object-model file for the coding agent. Closes the logic and connectedness gaps by asking before writing, never by guessing. Use when someone provides a demo scenario, demo notes, a client call summary, use cases in free form or a scenario docx for a Creatio demo and wants it reformatted, checked, or turned into a build-ready scenario.
 ---
 
 # Demo scenario writer
 
 ## What this is for
 
-A solution consultant finishes a client call and writes notes: free-form, in any
-order, business language, technically naive in places. You turn that into one
-document the solution engineer builds from without a rewrite cycle.
+A solution consultant writes their demo in free form: use cases one after
+another, business language, in whatever order the client call went. It is
+readable by them and by nobody else. The engineer cannot build from it and
+neither can a coding agent.
 
-The engineer writes nothing. They read your document, join one sync call to
-resolve the open questions, and start building. Everything they need is in the
-document — nothing is left to interpretation and nothing is invented.
+You turn it into two files — a scenario the consultant presents from, and an
+object model the build reads — without losing a detail of what they wrote,
+without redesigning their use cases, and without quietly inventing the answers
+to the questions their text left open.
 
-## The four things that make this work
+## The three things that decide everything
 
-**One reading only.** Every sentence has exactly one possible meaning. A step
-either states a fact or is an open question. There is no third state.
+**Nothing is lost.** Every sentence of the source lands somewhere and you can
+say where. A sentence you deliberately left out is reported with its reason.
+This is a rewrite, not a summary — see `reference/question-gate.md`, *Coverage*.
 
-**Use cases that test independently.** A use case depends on the Foundation,
-never on another use case having been run. If UC4 needs a case in progress, that
-case exists in the Foundation data set.
+**Their structure survives.** The use cases are theirs: same count, same order,
+same numbers. A long one gets phases. You are making their scenario legible, not
+proposing a better one.
 
-**Never invent functionality.** You have no access to a demo environment. You
-have an object-model snapshot and a best-practices file. Anything you cannot
-verify against them and cannot decide from the rules is an `?OPEN` addressed to
-the person who can actually answer it.
+**Their voice survives.** The pain points, the value language, the client's own
+vocabulary and the numbers the story hangs on move into the narration bubbles
+nearly intact. A rewrite that improves the consultant's phrasing into house
+style has deleted the thing they wrote the scenario for.
 
-**Decide far more than you ask.** A question that has one correct answer is not
-a question — it is you failing to do the job. Missing lookup values, missing
-simple fields, licensing, standard admin operations and single-implementation
-mechanisms are all decided, not asked. See `reference/best-practices.md`
-section 2 before you write any `?OPEN`.
+And one thing that is not negotiable: **ask before you write.** Everything that
+does not hold together gets asked, in one message, before the document exists —
+never resolved by a plausible guess. That is the gate this skill is built
+around.
 
 ## Read these before writing
 
 1. `reference/format.md` — the document contract. Non-negotiable.
-2. `reference/best-practices.md` — what you may specify, what you may not, what
-   to decide instead of asking, and how to query the object model.
-3. `reference/golden-use-case.md` — one worked use case. Match its density.
-4. `reference/anti-examples.md` — real failures and their fixes.
+2. `reference/question-gate.md` — what to ask, in which order, and how.
+3. `reference/objects-file.md` — the second deliverable, written for Claude Code.
+4. `reference/golden-use-case.md` — one worked example across both files, with
+   the consultant's original text beside it. Match its density.
+5. `reference/best-practices.md` — what you may specify, what you may not, and
+   what to decide instead of asking.
+6. `reference/anti-examples.md` — real failures and their fixes.
 
 ---
 
-## The flow
+## Two modes
 
-### Step 1 — Intake
+**Rewrite mode** — the consultant drops a finished or half-finished scenario in
+and asks for it to be reformatted or checked. This is the flow below, and it is
+the mode this skill currently implements.
 
-Read the consultant's input. Then ask, in **one single message**, only the
-checklist items the input does not already answer. Never ask about something they
-already told you. Never ask one question at a time.
+**Co-writing mode** — the consultant drops in client context (files, a call
+transcript, a deck) and starts inventing use cases out loud, one at a time,
+phase by phase, while you build the scenario alongside them and keep it current
+after every addition. Not yet specified. If a consultant asks for it, say the
+skill does the rewrite properly today and offer to work through their use cases
+one by one into the same format by hand.
 
-1. Client name, industry, size. **Is it banking, insurance or financial services?**
-   This decides which object-model snapshot you verify against.
-2. Link to the client's website — the source of their product names and terminology.
-3. Demo date and slot length.
-4. Who is in the room: role, and what that person must be convinced of.
-5. Who clicks during the demo — the consultant or the solution engineer.
-6. Which instance: an existing stand, a new OOTB stand, or a specific one.
-7. Base currency.
-8. Languages: which ones, and is this a real translation of custom captions or
-   the out-of-the-box language pack only?
-9. Is the mobile application in scope?
-10. If the input mentions calls or telephony: CTI emulator, or real telephony?
-11. Branding: are the client's logo and colours applied in the demo?
-12. What must not be shown.
-13. Is there a reference — a previous demo or standard product this builds on?
+Decide the mode from what arrived, not by asking: a scenario in the message is
+rewrite mode; client material with no use cases yet is co-writing.
 
-Say plainly that unanswered items will appear in the document as open questions.
-If the consultant does not answer some, proceed — do not stall and do not guess.
+---
 
-### Step 2 — Decompose
+## Rewrite mode — the flow
 
-Cut the input into use cases. One wow-moment each, maximum eight steps, testable
-alone in under ten minutes. A long use case in the input almost always contains
-three to five of them; find the seams at the points where the role changes or
-the wow changes.
+### Step 1 — Map the source
 
-Pull everything shared by two or more use cases into the Foundation: instances,
-roles and access rights, the data set, global settings. Each fact lives in
-exactly one place.
+Read the whole scenario before touching anything. Then tag every sentence with
+where it will land — step, bubble, object, flow line, header, question, or
+dropped-with-a-reason. `question-gate.md`, *Coverage*, has the tag list.
 
-Give the Foundation data set every record any use case needs, in the state that
-use case needs it. This is what removes the dependencies between use cases.
+This is working material, not a deliverable. Its purpose is that by the end of
+the job you can answer "where did my third paragraph go" without re-reading
+their file.
 
-### Step 3 — Verify
+Two things surface here for free: the use case boundaries the consultant already
+drew, and the sentences that are narration rather than action. Keep both.
 
-First write the list. Go through the decomposition and put down every name the
-document is going to assert — each object, each field, each lookup, each lookup
-value — one per line, in a file:
+### Step 2 — Run the ten logic checks
 
-```
-Case
-Case.PriorityId
-CaseStatus=In progress
-Order.labReturnType
-```
+Walk `question-gate.md` Tier A over the mapped source: orphan preconditions,
+dead results, actor jumps, impossible order, silent mechanisms, phase boundaries
+that do not hold, two-reading steps, contradictions, unexplained terms,
+unreachable pages.
 
-Then verify the whole list in one call:
+Anything a check fires on is either resolvable from `best-practices.md`
+section 2 — and then you resolve it and record what you did — or it is a Tier A
+question.
+
+**Check 5, silent mechanism, is where the value of this skill sits.** A result
+with no cause is the defect that survives every review and then fails in the
+room. Every on-screen value must be either typed by the presenter or carry a
+provenance marker; where you cannot name what produced it, ask.
+
+### Step 3 — Ask Tier A, once
+
+One message, numbered, every question three lines: what it blocks, the question
+with their own words quoted back, and the default you will apply if they do not
+answer. Say that unanswered items ship as open questions with the default
+already written into the step.
+
+Wait once. Then proceed regardless — do not stall and do not chase.
+
+### Step 4 — Verify every name
+
+Collect every object, field, lookup and lookup value the two files will assert,
+one per line, and check the list in a single call:
 
 ```bash
-sh scripts/model.sh check --file spec.txt
+sh scripts/model.sh check --file verification.txt
 ```
 
-One line comes back per name: `OK` with the field's type and lookup target, or
-`MISSING` with the closest real name and, for a lookup value, the values that
-are actually there. Exit code 1 means at least one name did not verify.
+Items read as `Account`, `Case.PriorityId`, `CaseStatus=New`. `OK` returns the
+field's type and lookup target; `MISSING` returns the closest real name, or the
+values a lookup actually holds. Add `--banking` for banking, insurance and
+financial services clients — and the snapshot you used goes in the objects file
+header, because a finding from one snapshot never carries over to the other.
 
-**The list is the discipline.** A name that never entered it is a name you did
-not verify, and the batch call is what makes verifying all of them cheap enough
-that there is no excuse to skip any: 35 names cost one call instead of 35.
-Extend the file and re-run it whenever the draft grows a new name.
+`MISSING` is not automatically a problem: a new column and a new lookup value
+are supposed to be missing, and are marked **new** in the objects file. What the
+list catches is a name marked `existing` that does not exist.
 
-The single-name commands are for exploring, when you do not yet know what to
-put in the list:
+The single-name commands are for exploring, before you know what to put in the
+list:
 
 ```bash
 sh scripts/model.sh search opportunit          # which object is this?
@@ -125,101 +138,80 @@ sh scripts/model.sh field priority --object Case
 sh scripts/model.sh sections                   # what has a UI section?
 ```
 
-Add `--banking` for financial services clients.
-
 Run these from this skill's own directory — `scripts/` and `assets/` are
 relative to it. `model.sh` works the same on macOS, Linux and Windows: it finds
 a real Python 3 whatever it is called on that machine, needs nothing installed
 beyond it, and locates the snapshots relative to itself. If it reports no
-interpreter, say so and stop; do not write build-spec lines you could not
-verify.
+interpreter, say so and stop; a name you could not verify is not a name you may
+write down.
 
-Every object, field, lookup and lookup value gets checked. `MISSING` — or exit
-code 1 — means **not verified**: absent from the snapshot, or present but empty
-in it. A finding from one snapshot never carries over to the other. Query
-through the commands above; never open the tables in `assets/` yourself, and
-never open the xlsx in `snapshots/` — that is the maintainer's source, 36 000
-rows of it.
+Never open the tables in `assets/` yourself, and never open the xlsx in
+`snapshots/` — that is the maintainer's source, 36 000 rows of it.
 
-`object` hides the six system columns (`Id`, `CreatedOn/By`, `ModifiedOn/By`,
-`ProcessListeners`) that every object has and no demo spec needs; pass `--all`
-if you actually need them.
+Then check every mechanism against `best-practices.md` section 1. A mechanism
+not on that list is a question for the engineer, not an assumption.
 
-**Not verified is not automatically a question.** A missing lookup value or a
-missing simple column is a build-spec line, not an `?OPEN` — see
-`reference/best-practices.md` section 2. It becomes a question only when there
-is nothing to count, derive or add cheaply.
+### Step 5 — Write both files
 
-Check every mechanism against `reference/best-practices.md` section 1. A
-mechanism not on that list is an `?OPEN` for the engineer.
+In one pass, in the exact structure of `format.md` and `objects-file.md`. The
+scenario file carries the narrative; the objects file carries the model and the
+seed data. A fact appears in exactly one of them.
 
-### Step 4 — Write
+Cross-check the pair in both directions before delivering: every column in the
+objects file names the steps that put it on screen, and every field a step shows
+has a row in the objects file. A column with no step is a column nobody asked
+for; a step with no row is a build item nobody will build.
 
-Produce the whole document in one pass, in the exact structure of
-`reference/format.md`. Deliver it as one Markdown file — see section 9 of the
-format contract for the file name and what Markdown is allowed in it.
+### Step 6 — Hand over
 
-Open questions go in the `Open` part of the use case that needs them. There is no
-collected list at the end of the document; the Open column of the use case index
-is how the reader finds them.
+In the conversation, not in the documents:
 
-### Step 5 — Ask what to change
+- the two file paths;
+- use cases and step counts;
+- the coverage residue — how many source sentences mapped, and every dropped one
+  quoted with its reason;
+- the `check` result;
+- Tier B: one message of content questions, each with its default already in the
+  draft.
 
-End with a short message: the use case count, the number of open questions split
-by addressee, and one question — what to change. Nothing else. No summary of the
-document; they have the document.
-
----
-
-## The three kinds of question
-
-Getting the addressee right is the point of this whole skill. The original
-problem was consultants guessing at technical decisions.
-
-| Kind | Asked when | Asked of | Example |
-|---|---|---|---|
-| **Checklist** | Step 1, in one batch | Consultant | "Which languages, and is this a real translation or the OOTB language pack?" |
-| **`?OPEN` business** | In the use case | Consultant | "Is the case assigned by the account's region or the contact's region?" |
-| **`?OPEN` business** | In the use case | Consultant | "What counts as an RMA for this client? Nothing on Order marks a return, so the metric has no source." |
-| **`?OPEN` platform** | In the use case | Engineer | "UC7 and UC9 need the same lookup restricted differently on two pages; one entity business rule cannot do both. Which page keeps the restriction?" |
-
-**Never ask a consultant a platform question.** They cannot answer it, and their
-attempt to answer it is exactly the technical guesswork this process removes.
-
-**Never ask the engineer to pick a mechanism.** Ask for the outcome. "Which
-mechanism: a process, a business unit change, or deactivation?" is you offloading
-your own job. State the standard mechanism; ask what the end state should be.
+Then one question, and nothing else: what to change.
 
 ---
 
 ## Hard rules
 
-1. **One happy path.** No branches. *If*, *or*, *optionally*, *alternatively*,
-   *in case of* are banned from steps. An alternative flow is its own use case or
-   is dropped.
-2. **A use case never requires another use case.** Only Foundation items.
-3. **A fact appears once.** The happy path says what the user sees; the build
-   spec says what to configure. If a line fits both, it goes in the build spec.
-4. **No unverified assertion.** Object, field, lookup, value, mechanism — checked
-   against the snapshot, or decided by the rules, or `?OPEN`.
-5. **Decide before you ask.** Check every candidate question against
-   `reference/best-practices.md` section 2 first.
-6. **No GUIDs, no record Ids, no credentials** in the output.
-7. **Acceptance is one-to-one with the happy path**, same numbering, every result
-   observable on screen.
-8. **Exact data.** Never "a few", never "several", never "10 sample records"
-   without naming them.
-9. **Banned words** — see `reference/format.md` section 7. Check your own draft
-   against that list before delivering.
-10. **Nothing outside the five sections.** No purpose, no goals, no brief summary,
-    no closing notes, no collected question list.
-11. **Never renumber a use case** once the consultant has seen the index.
+1. **The use case count and order are the consultant's.** Never merge, never
+   split into new numbers, never renumber, never invent one. Long use cases get
+   phases.
+2. **Step numbers never shift**, across phases or revisions. A removed step
+   leaves a gap.
+3. **Every chain ends on something visible on screen.** A step with nothing to
+   look at belongs inside the previous chain.
+4. **Every value the presenter did not type carries its provenance**, in
+   italics. No exceptions — this is the rule the whole format hangs on.
+5. **One path.** *If*, *or*, *optionally*, *alternatively*, *in case of* are
+   banned from steps. An alternative flow is dropped or becomes its own step.
+6. **The words "click" and "say" never appear.** The arrow carries the action,
+   the bubble carries the voice.
+7. **A fact appears once**, in one of the two files.
+8. **No unverified assertion.** Object, field, lookup, value, mechanism —
+   checked against the snapshot, or decided by the rules, or asked.
+9. **Decide far more than you ask.** Check every candidate question against
+   `best-practices.md` section 2 first. Missing lookup values, missing simple
+   fields, licensing and standard admin operations are decided, not asked.
+10. **Every question ships with the default already applied**, in the document
+    and in the message that asks it.
+11. **No GUIDs, no record Ids, no credentials** in either file.
+12. **Banned words** — `format.md` section 8. Check your own draft against the
+    list before delivering.
+13. **Nothing outside the sections** either contract defines.
 
 ## What good looks like
 
-A five-use-case scenario is roughly 600–900 words of body text plus tables. If
-you are well past that, you are duplicating something — most often a build-spec
-line restating a step. Check that before anything else.
+A five-use-case scenario runs about 700–1 100 words of body text, with two to
+four bubbles per use case and no bubble narrating what the next step already
+shows. The objects file is as long as it needs to be; nobody skims it.
 
-One use case, read once, built, its acceptance rows run, and on to the next —
-without ever opening another section.
+The test of the pair is a colleague who was not on the client call: they read
+the scenario once and could present it, and a coding agent reads the objects
+file and builds without asking a question.

@@ -1,8 +1,9 @@
 # Best practices — the white list
 
 You have no access to a demo environment. This file plus the object-model
-snapshot is your only ground truth. **A build-spec line you cannot trace to this
-file or to `scripts/model.py` output is not a line — it is an `?OPEN`.**
+snapshot is your only ground truth. **A line in either deliverable that you
+cannot trace to this file or to `scripts/model.sh check` is not a line — it is a
+question.**
 
 Keep this file current. When the team learns a new limitation or adds a reusable
 block, it is edited here, not remembered.
@@ -74,10 +75,11 @@ user and the agent: what the user asks or clicks, and what the agent returns.
 
 ## 2. Decide, don't ask
 
-An `?OPEN` costs the consultant's attention and makes the document look
+An open question costs the consultant's attention and makes the document look
 unfinished. Raise one only when the answer **changes what gets built** and you
 cannot derive it. The categories below have exactly one correct answer. Decide
-them, write the decision into the build spec, and move on.
+them, write the decision into the objects file and into *What I changed*, and
+move on.
 
 **A missing lookup value.** The scenario needs a value the lookup does not have?
 Add it. Write `(new value in existing lookup)` and name the value. Only if an
@@ -138,20 +140,20 @@ This list is why you can say no. Add to it whenever the team hits a new wall.
 - **A lookup cannot be filtered for one page only.** Restricting the records a
   lookup offers is an entity business rule and applies everywhere that lookup is
   used. Specify the rule and note that consequence in the same line — this is not
-  a question. It becomes an `?OPEN` only when the same demo needs *different*
+  a question. It becomes a real question only when the same demo needs *different*
   contents for that lookup on two different pages, which the rule cannot do.
 - **Mobile pages are more limited than web pages** — a separate component
   catalogue, and no handlers, validators or converters. Complex mobile logic is
-  an `?OPEN`, not an assumption.
+  a question for the engineer, not an assumption.
 - **A user-visible caption in a multilingual demo must be a localisable string.**
-  Every custom caption multiplies by the number of languages. If the Demo card
-  lists more than one language, say so in the build spec; it is a real cost.
+  Every custom caption multiplies by the number of languages. If the header
+  lists more than one language, say so in the objects file; it is a real cost.
 - **Freshly added columns can lag in OData**, so seeded data may not appear
   immediately after the build. Relevant to timing, not to the scenario.
 - **A total that is a sum of child records must be recalculated by the platform**,
   never typed. Say "recalculated from the branch lines, never entered manually".
 - **Renaming a lookup value changes it everywhere.** If the scenario needs the
-  old caption somewhere else in the same demo, that is an `?OPEN`.
+  old caption somewhere else in the same demo, that is a question.
 - **Never output a GUID or a record Id.** The engineer resolves every lookup by
   name. The snapshot carries no record Ids at all, so there is nothing to leak
   even by accident.
@@ -170,7 +172,7 @@ tables per model — objects, fields and lookup values.
 
 Use the banking model when the client is a bank, an insurer or any financial
 services firm; the general model otherwise. State which one you used in the
-Demo card.
+objects file header.
 
 Never open the compiled tables yourself. Query them. Verifying the draft is
 one batch call — collect every name first, then:
@@ -194,21 +196,23 @@ sh scripts/model.sh object Case --all       # + Id, CreatedOn/By, ModifiedOn/By
 
 `object` hides the six system columns every object carries — `Id`, `CreatedOn`,
 `CreatedById`, `ModifiedOn`, `ModifiedById`, `ProcessListeners`. They are never
-part of a demo spec. `--all` shows them; a `field` search finds them regardless.
+part of a demo scenario. `--all` shows them; a `field` search finds them
+regardless.
 
 Exit code 1 means **not verified** — either it is absent from the snapshot, or it
 is present but empty there. The message tells you which — and for a lookup it
 says why, which matters: `too large (N rows)` means the lookup certainly HAS
 values and the export skipped them at the 500-row cap, so the answer is to have
 them read off the instance, not to treat the lookup as empty. Both outcomes mean the
-same thing for your draft: `?OPEN`, never a guess. A finding from one snapshot
+same thing for your draft: a question with a default, never a guess. A finding
+from one snapshot
 never carries over to the other; the two models differ, sometimes sharply —
 `Order` and `Invoice` do not exist in the banking model at all, and
 `CaseCategory` has two values in one and three in the other.
 
 **Verify before you write, not after.** Every object, field, lookup and lookup
-value in a build spec is checked. This is not optional and it is not slow — it is
-one command per object.
+value either file asserts is checked. This is not optional and it is not slow —
+it is one `check` call for the whole list.
 
 ---
 
@@ -254,9 +258,9 @@ create a new object without saying why.
 - **Prefix new custom names** with the client or app prefix, consistently across
   the document.
 - **Name UI elements as they appear on screen**, in the demo language.
-- **Amounts, counts and dates are exact.** A count in an acceptance row must
-  match the data in F3.
-- **Credentials never appear in the document.**
+- **Amounts, counts and dates are exact.** A count a step shows on screen must
+  match the seed data in the objects file that adds up to it.
+- **Credentials never appear in either file.**
 
 ---
 

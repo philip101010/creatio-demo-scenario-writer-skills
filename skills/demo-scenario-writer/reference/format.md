@@ -1,7 +1,20 @@
 # Output format — the contract
 
-This file defines the document you produce. It is a contract, not a suggestion.
-Every rule here exists because a real scenario failed without it.
+Two files come out of this skill, and the split is the whole idea:
+
+| File | Reader | Holds |
+|---|---|---|
+| `<client>-demo-scenario-v<n>.md` | the consultant, presenting | the narrative: use cases, phases, bubbles, steps |
+| `<client>-objects-v<n>.md` | Claude Code, building | the data model and the seed data — see `objects-file.md` |
+
+Nothing appears in both. The scenario names an object or a value only where a
+step actually shows it on screen; what to configure lives in the objects file.
+This is why the scenario stays short enough to be read in a meeting and the
+objects file stays complete enough to be handed to a coding agent without a
+covering explanation.
+
+This file is a contract, not a suggestion. Every rule exists because a real
+scenario failed without it.
 
 ---
 
@@ -9,271 +22,274 @@ Every rule here exists because a real scenario failed without it.
 
 ```
 # <Client> — Demo scenario
-Version <n> — <date>
+v<n> · <date> · <N> use cases
 
-## 1. Demo card
-## 2. Use case index
-## 3. Running order
-## 4. Foundation
-## 5. Use cases
+## Before you present
+
+## UC1 — <name>
+## UC2 — <name>
+...
+
+## What I changed
+## Open questions
 ```
 
-Five sections. Nothing else. No "Brief demo summary", no "Purpose", no
-"Goals / Problems", no "Attachments", no closing notes, and **no collected list
-of open questions at the end** — every question lives inside the use case it
-belongs to.
+No purpose section, no goals, no brief summary, no attachments, no closing
+notes, no object tables, no acceptance table. The reasons for the last two are
+in section 7.
 
 ---
 
-## 2. Demo card
+## 2. Header
 
-One table, these thirteen rows and no others. Fill from the intake checklist.
-Unknown after asking → `?OPEN`, never a guess, never "TBD".
+Telegraph lines under the title — values, never prose. One line each, only the
+lines that have content:
 
-| Row | Content |
+```
+Client · Contoso Motors, automotive retail, 400 staff
+Use cases · 4 — call intake · warranty claim · OEM review · service dashboard
+Demo user · Supervisor, and one dealer role for UC3
+Instance · https://contoso-demo.creatio.com
+Integrations · CTI emulator; OEM warranty feed emulated with seed data
+```
+
+An integration that is emulated says so here. A consultant who discovers in the
+room that the OEM feed was seed data has been ambushed by their own document.
+
+---
+
+## 3. Before you present
+
+Exactly one line:
+
+> Run the **Run before demo** process — it resets every record this demo touches
+> to its opening state.
+
+Not a checklist. The reset itself is a build artifact and is specified in the
+objects file, alongside the seed data it restores.
+
+---
+
+## 4. Use case
+
+```
+## UC<n> — <name>
+
+*<flow line>*
+
+### Phase 1 — <name>
+
+> <bubble>
+
+1.  <chain>
+2.  <chain>
+
+### Phase 2 — <name>
+
+> <bubble>
+
+3.  <chain>
+```
+
+**The use case count and order are the consultant's.** In rewrite mode you never
+merge two, never split one, never renumber, and never invent a fifth. A use case
+that runs long gets phases, not a new number. This is their scenario; you are
+making it legible, not redesigning it.
+
+### The flow line
+
+One italic line under the title, plain language, arrows, **no element names and
+no field names** — the skeleton the steps then demonstrate:
+
+> *Service visit closed → warranty checked automatically → claim created → OEM
+> reviews → reimbursement paid*
+
+A reader who only reads flow lines still knows what the demo does. Write it
+that way.
+
+### Phases
+
+A phase is a named stretch of one use case. It exists to break a long use case
+without touching the step numbers, and it is only allowed where the story
+actually turns:
+
+- **the actor changes** — the dealer hands off to the OEM reviewer,
+- **the system changes** — the demo moves to the mobile app, the portal, a chat,
+- **time passes** — overnight, next visit, after the approval.
+
+Nothing else is a phase boundary. A use case with one actor, one screen and no
+wait is one phase, and then the phase heading is omitted entirely — do not wrap
+a three-step use case in `Phase 1` to look thorough.
+
+**Step numbers run continuously through the whole use case**, across phases. UC3
+step 7 is step 7 whichever phase it sits in.
+
+### The bubble — narration above a group of steps
+
+Everything the presenter *says* but does not *do* lives in a bubble, placed
+above the steps it covers, as a Markdown blockquote.
+
+- **Two to four per use case**, each covering a stretch of three to eight steps.
+  A bubble per step is the exact mistake this format exists to prevent.
+- **Placed where the story turns** — opening the use case, entering a phase, and
+  the payoff.
+- **Built from the consultant's own words.** This is a rewrite, not a rewrite of
+  their voice: their pain points, their value language, the client's vocabulary
+  and the numbers the story hangs on move into the bubbles nearly intact. If you
+  find yourself improving their phrasing into house style, stop — you are
+  deleting the thing they wrote the scenario for.
+- **Problem → what you are about to see → what it means.** Three sentences is the
+  ceiling.
+- Never a claim the steps do not demonstrate. No *seamlessly*, no "the system
+  automatically" without naming the mechanism, no emoji.
+
+### The step — a chain ending on something visible
+
+> `7.  Claim WC-0042 → Decision **Accepted** → stage moves to **Reimbursement**
+>     → dashboard tile **Recovered this month** reads **42 750 SAR**
+>     *(rolled up by the process)*`
+
+1. **The words "click" and "say" never appear.** The arrow carries the action;
+   the bubble carries the voice.
+2. **Location first, when the page changes.** The first link names where you are
+   — list page, form page plus tab, mini page, Home page, chat panel. Omit it
+   only while you stay on the same page.
+3. **Every chain ends on something the audience can see.** A step that produces
+   nothing to look at is not a step; it belongs inside the previous chain.
+4. **Name the mechanics inline** — the column caption, the lookup value in
+   quotes, the component — in **bold**. Bold is for element and value names
+   only, never for emphasis.
+5. **Provenance in italics** for every value the presenter did not type:
+   *(created by the process)*, *(from the OEM feed)*, *(calculated by the rule)*,
+   *(seeded)*. See section 5 — this rule does more work than any other.
+6. **One step, one coherent move.** A chain may hold several actions when they
+   are one gesture ("open the tab → pick the record → the form opens"); it must
+   not hold two unrelated ideas.
+7. **One path.** *If*, *or*, *optionally*, *alternatively*, *in case of* are
+   banned. An alternative flow is dropped or becomes its own step, never a
+   branch inside one.
+8. **Numbering never shifts.** Steps are numbered per use case and keep their
+   numbers across every revision, so "UC2 step 7" means the same thing in the
+   meeting, in the objects file and in the build. A removed step leaves a gap
+   rather than renumbering the rest.
+
+---
+
+## 5. Provenance — the rule that makes the demo credible
+
+Every value on screen came from somewhere. Either the presenter typed it, or
+the system produced it. If the presenter did not type it, the step says what
+did, in italics, in parentheses:
+
+| Marker | Means |
 |---|---|
-| Client | Name, industry, size |
-| Client website | URL — source of product names and terminology |
-| Demo date / slot | Date, length in minutes |
-| Audience | Role — and what that person must be convinced of. One line per person in the room |
-| Who clicks | Consultant or solution engineer |
-| Instance | Existing URL, or "new OOTB", or the specific stand |
-| Base currency | Currency code |
-| Languages | Codes; state whether real translation of custom captions or OOTB language pack only |
-| Mobile | In scope / out of scope |
-| Telephony | CTI emulator / real telephony / not in scope |
-| Branding | Logo and colours applied / not applied |
-| Out of scope | What must not be shown |
-| Object model | `general` or `banking` — which snapshot was used for verification |
+| *(seeded)* | it was in the data set before the demo started |
+| *(created by the process)* | a business process wrote it during the demo |
+| *(calculated by the rule)* | a business rule or calculated field derived it |
+| *(from the CTI emulator)* | an integration or emulator supplied it |
+| *(set by the stage model)* | the DCM case moved it |
+| *(returned by the AI skill)* | Creatio.ai produced it |
+
+Two things fall out of this, which is why it earns a section of its own:
+
+**For the consultant** it is the whole sales argument made visible — the
+audience sees the system doing the work rather than the presenter typing an
+answer they were always going to type.
+
+**For the engineer** it is the build list hiding inside the narrative. A step
+that says *(created by the process)* is a process to build; *(calculated by the
+rule)* is a rule; *(seeded)* is a row in the objects file. A result with no
+marker and no typing is a hole, and finding those holes is most of what the
+question gate does — see `question-gate.md`, check 5.
 
 ---
 
-## 3. Use case index
+## 6. What I changed, and Open questions
 
-The first thing the reader sees after the card, and the only thing they need in
-order to say "wrong, change this". One row per use case.
+**What I changed** — the deviation record, in the document rather than hidden,
+because the consultant handed you their text and must be able to find where it
+was altered. One line each, newest concern first:
 
-| ID | Use case | Wow | Covers input | Requires | Open |
-|---|---|---|---|---|---|
+> - UC2 steps 4–6 were one paragraph; split into three steps because the
+>   approval happens on the manager's screen, not the rep's.
+> - "Information request" added to **Case category** — the snapshot holds only
+>   Incident and Service request, and UC4 routes on this value.
+> - Dropped the SMS reminder: it needs development, and nothing in the demo
+>   depends on it.
 
-- **ID** — `UC1`, `UC2`, … Stable. Never renumbered once issued.
-- **Wow** — one line: what the client says out loud when they see it.
-- **Covers input** — which part of the consultant's text this came from, so they
-  can check nothing was lost and nothing was invented.
-- **Requires** — Foundation items only (`F1`, `F3`). **Never another use case.**
-- **Open** — how many open questions this use case carries, and for whom:
-  `1 consultant`, `2 engineer`, or `—`.
+**Open questions** — only what survived the gate: what the consultant declined
+to answer, or deferred. Each one states three things, and the third is not
+optional:
 
-The Open column is how the reader finds the holes without a separate section.
+> - **Q1** · blocks UC2 step 4 · Is the case routed by the account's region or
+>   the contact's region? · **Applied: the account's region**, because the
+>   routing rule reads the account.
 
----
-
-## 4. Running order
-
-One line: `F → UC2 → UC1 → UC4 → UC3`.
-
-The demo narrative order. It is deliberately separate from the use case
-numbering so that story sequencing never creates a technical dependency.
+The step affected still appears, written to the default. A document with open
+questions is still presentable and still buildable — that is the point of
+stating the default rather than leaving a hole.
 
 ---
 
-## 5. Foundation
+## 7. What this format deliberately does not have
 
-Everything shared by two or more use cases lives here, once. If a fact appears
-in a use case, it must not appear in Foundation, and the reverse.
+**No object or field tables.** They are in the objects file, whose reader is a
+coding agent. A consultant reading past a column-type table is a consultant not
+reading the next use case.
 
-- **F1 Instances** — URLs and what each stand is for. Never credentials.
-- **F2 Roles and access rights** — one table: role, business unit, what they see,
-  what they may not see. This is the single place access rights are described.
-- **F3 Data set** — every record any use case needs, named, with the field values
-  that matter. Counts and amounts exact.
-- **F4 Global settings** — base currency, languages, mailbox, CTI, workplaces,
-  default pages.
+**No acceptance table.** Rule 3 of the step already forces every chain to end on
+something visible, which *is* the expected result. A separate acceptance table
+would restate every step in a second column — the duplication that turns a
+600-word scenario into 7 000. The engineer verifies by walking the steps.
 
-**F3 is what makes use cases independently testable.** If UC4 needs a case
-already in status "In progress", that case exists in F3 in that status. A use
-case never requires that another use case was executed first.
+**No Foundation section.** Shared setup and the state every record starts in
+live in the objects file's seed data, which is what makes a use case runnable
+without another use case having been run first.
 
 ---
 
-## 6. Use case
-
-Fixed shape. Every use case has all six parts, in this order.
-
-```
-### UC<n> <Name>
-
-**Wow:** one line.
-**Roles:** the roles used, in order of appearance. Maximum two role switches.
-**Requires:** F<n>, F<n>.
-
-**Happy path**
-1. …
-
-**Build spec**
-Objects and fields
-- …
-Logic
-- …
-Processes
-- …
-Access
-- …
-UI
-- …
-Dashboards
-- …
-
-**Data**
-- …
-
-**Acceptance**
-| # | Action | Expected result |
-
-**Open**
-- ?OPEN-<n> …
-```
-
-### Use case contract
-
-1. **One wow-moment per use case.** Two wows means two use cases.
-2. **Maximum 8 happy-path steps.** Over 8 → split.
-3. **Testable by one person in under 10 minutes**, with no other use case run first.
-4. **One use case = one engineer task = one test run.**
-5. **Acceptance is self-contained** — readable without opening another use case.
-6. **Dependencies point down to Foundation only, never sideways to a use case.**
-
-### Happy path
-
-Grammar, every step, no exceptions:
-
-> `<Role>` `<does>` → `<what is now visible>`
-
-- One sentence. Present tense. Third person or first person, chosen once per
-  document and never mixed.
-- Only one path. The words *if*, *or*, *optionally*, *alternatively*,
-  *in case of* are banned. An alternative flow is a separate use case or is
-  dropped.
-- Name UI elements exactly as they appear. An element whose real caption you do
-  not know is an `?OPEN`, not a plausible guess.
-- No adjectives about value ("powerful", "seamless", "modern"). The wow line
-  carries the selling; the steps carry the facts.
-
-### Build spec
-
-What to configure. Never what the user sees — that is the happy path's job.
-If a line could belong to both, it belongs here only.
-
-- Bullets under the group headings shown in the template above, in that order.
-  Omit a group that has nothing in it; never reorder them.
-- Every object, field and lookup value verified against the snapshot with
-  `scripts/model.sh check`. Mark each as:
-  - `(existing field)` — present in the snapshot, used as is.
-  - `(existing lookup)` — with the rename convention:
-    `Status (existing lookup): rename value "New" to "Prospect", keep all other values as is.`
-  - `(new value in existing lookup)` — the default answer when a value the
-    scenario needs is absent. State it; do not ask about it.
-  - `(new field)` — with type, and lookup target if a lookup.
-  - `(new object)` — with every field, and where it appears as a detail.
-- Prefer renaming an existing field or lookup value over creating a new one, and
-  say so explicitly. Renaming is cheaper to build than creating.
-- Never output a GUID, a record Id or any identifier from the snapshot. Names only.
-
-### Data
-
-The records this use case needs, by name, with exact values. Never "a few leads",
-never "several orders". If the acceptance checks a count, the count is stated here.
-
-Records shared with another use case live in F3 and are referenced, not repeated.
-
-### Acceptance
-
-One row per happy-path step, same numbering, one-to-one. This is how the engineer
-verifies the build without reading prose.
-
-| # | Action | Expected result |
-|---|---|---|
-| 3 | Click the caller's name | KYC tab opens, Incoming calls = 3, Champion = true |
-
-Expected result must be observable on screen and checkable in under a minute.
-"Works correctly" is not an expected result.
-
-### Open
-
-Numbered `?OPEN-<n>`, unique across the document, listed inside the use case that
-needs them and nowhere else. Each one states:
-
-- what is unresolved,
-- which step or acceptance row it blocks,
-- who answers: `consultant` or `engineer`.
-
-Format:
-
-```
-**Open**
-- **?OPEN-3** — consultant. Blocks step 4. Is the case assigned by the account's
-  region or the contact's region? The input says "by region" without saying whose.
-```
-
-A step referencing an `?OPEN` still appears in the happy path, with the marker
-inline, so the reader sees where the hole is.
-
-**Before writing any `?OPEN`, check it against the "Decide, don't ask" list in
-`best-practices.md` section 2.** Most first-draft questions belong there — they
-have one correct answer and asking them wastes the consultant's attention and
-makes the document look unfinished.
-
-A use case with no open questions writes `**Open** — none.` and moves on.
-
----
-
-## 7. Banned words
+## 8. Banned words
 
 Reject your own draft if it contains any of these, and rewrite:
 
-`should be able to` · `etc.` · `if possible` · `as needed` · `various` ·
-`some` · `several` · `a few` · `e.g.` in a build-spec line · `and/or` ·
-`optionally` · `TBD` · `N/A` · `we could` · `it would be nice` ·
-`similar to` · `and so on`
+`click` · `say` · `should be able to` · `etc.` · `if possible` · `as needed` ·
+`various` · `some` · `several` · `a few` · `and/or` · `optionally` · `TBD` ·
+`N/A` · `we could` · `it would be nice` · `similar to` · `and so on` ·
+`seamlessly` · `powerful` · `robust`
 
-`e.g.` is allowed in the Demo card and in a wow line. Nowhere else.
-
----
-
-## 8. Length
-
-A five-use-case scenario is roughly 600–900 words of body text plus tables.
-If you are past that, you are duplicating. The single most common cause is a
-build-spec line restating a happy-path step. Check that first.
+`e.g.` is allowed in the header. Nowhere else.
 
 ---
 
 ## 9. Delivery
 
-One Markdown file, UTF-8, written to the working directory:
+Two Markdown files, UTF-8, in the working directory:
 
 ```
 <client>-demo-scenario-v<n>.md
+<client>-objects-v<n>.md
 ```
 
-Lower case, hyphens for spaces in the client name —
-`northwind-demo-scenario-v1.md`. The version in the file name is the version on
-the second line of the document, and a revision after the consultant's comments
-increments both. Never overwrite the previous version; the consultant compares
+Lower case, hyphens for spaces — `contoso-motors-demo-scenario-v1.md`. Both
+files carry the same version, and a revision after the consultant's comments
+increments both together even if only one changed, so a pair on disk is always a
+matching pair. Never overwrite the previous version; the consultant compares
 them.
 
-Markdown, so the document diffs, reviews and pastes anywhere. Use only what this
-contract already uses:
+Markdown only, and only this much of it: `#` for the title, `##` for the
+sections and use cases, `###` for phases, `>` for bubbles, numbered lists for
+steps, `-` for every other list, `**bold**` for element and value names,
+`*italic*` for the flow line and provenance, backticks for a name that could be
+read as prose. Pipe tables only in the objects file.
 
-- `#` for the title, `##` for the five sections, `###` for a use case.
-- Pipe tables for the Demo card, the use case index, roles and acceptance. Every
-  table gets its header separator row; no merged cells, no nested tables.
-- `**bold**` for the fixed labels inside a use case — `**Wow:**`,
-  `**Happy path**`, `**Build spec**`, `**Data**`, `**Acceptance**`, `**Open**` —
-  and nowhere else. Bold is structure here, not emphasis.
-- Numbered lists for happy-path steps, `-` for every other list.
-- Backticks for a field, object or lookup name that could be read as prose.
+No raw HTML, no images, no footnotes, no colour, no highlighting. A doubt that a
+highlight would have carried is an open question with a default — the only form
+a question takes in this document.
 
-No raw HTML, no images, no footnotes, no collapsible blocks, no colour and no
-highlighting. A doubt that a highlight would have carried is an `?OPEN`, which
-is the only form a question takes in this document.
+---
+
+## 10. Length
+
+A five-use-case scenario runs about 700–1 100 words of body text. Past that you
+are duplicating, and the usual culprit is a bubble narrating what the next step
+already shows. Check that before anything else.
