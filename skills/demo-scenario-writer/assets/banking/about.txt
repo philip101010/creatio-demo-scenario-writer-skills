@@ -1,0 +1,11 @@
+Source: snapshots/creatio-banking-object-model.xlsx
+Compiled by tools/build-model.py. Do not edit by hand.
+
+Sheet 'Objects' | All 1659 objects exposed by the instance, with caption, section flag and field counts (snapshot values)
+Sheet 'Fields' | Every field of every object: data type, required flag, lookup target
+Sheet 'Lookup Values' | Values of lookup objects referenced by lookup fields (per-object cap: 500 rows)
+Notes
+- 'Has Section' = the object is registered as a section workplace module (SysModule)
+- Lookup values were fetched only for referenced objects with <= 500 rows;
+larger ones (system registries like SysSchema, ConfActivityLog) are marked 'too large' in 'Fields'.
+- System columns (Id, CreatedOn/By, ModifiedOn/By, ProcessListeners) are included for completeness.

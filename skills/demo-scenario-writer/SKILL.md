@@ -102,14 +102,20 @@ Add `--banking` for financial services clients.
 
 Run these from this skill's own directory — `scripts/` and `assets/` are
 relative to it. `model.sh` works the same on macOS, Linux and Windows: it finds
-a real Python 3 whatever it is called on that machine and locates the snapshots
-relative to itself. If it reports no interpreter or a missing `openpyxl`, say so
-and stop; do not proceed to write build-spec lines you could not verify.
+a real Python 3 whatever it is called on that machine, needs nothing installed
+beyond it, and locates the snapshots relative to itself. If it reports no
+interpreter, say so and stop; do not write build-spec lines you could not
+verify.
 
 Every object, field, lookup and lookup value gets checked. Exit code 1 means
 **not verified** — absent from the snapshot, or present but empty in it. A
-finding from one snapshot never carries over to the other. Do not read the xlsx
-directly; it has 17 000 rows.
+finding from one snapshot never carries over to the other. Query through the
+commands above; never open the tables in `assets/` yourself, and never open the
+xlsx in `snapshots/` — that is the maintainer's source, 36 000 rows of it.
+
+`object` hides the six system columns (`Id`, `CreatedOn/By`, `ModifiedOn/By`,
+`ProcessListeners`) that every object has and no demo spec needs; pass `--all`
+if you actually need them.
 
 **Not verified is not automatically a question.** A missing lookup value or a
 missing simple column is a build-spec line, not an `?OPEN` — see

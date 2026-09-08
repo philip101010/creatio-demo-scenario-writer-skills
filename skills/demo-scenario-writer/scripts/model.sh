@@ -9,7 +9,9 @@
 #   * the working directory. The snapshots are found relative to this file, so
 #     the command works from anywhere.
 #
-# Arguments are passed straight through:
+# The script needs nothing outside the standard library, so there is no
+# dependency to probe for and one interpreter check is the whole of the startup
+# cost. Arguments are passed straight through:
 #   sh scripts/model.sh object Case
 #   sh scripts/model.sh lookup CaseStatus --banking
 
@@ -17,10 +19,20 @@ set -e
 
 HERE=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 
-# A candidate counts only if it really runs and really is Python 3 — the Store
+# Probe order matters for speed, not just correctness. Launching the Windows
+# Store stub costs about a quarter of a second before it fails, so on Windows
+# `python` is tried first; everywhere else `python3` is both the right answer
+# and the first guess. The stub is installed under BOTH names, so the probe
+# below still has to run - the order only decides how often it wastes 250 ms.
+case $(uname -s 2>/dev/null) in
+    MINGW*|MSYS*|CYGWIN*|Windows*) CANDIDATES="python py python3" ;;
+    *)                             CANDIDATES="python3 python py" ;;
+esac
+
+# A candidate counts only if it really runs and really is Python 3 - the Store
 # stub fails both halves of that test.
 PY=""
-for candidate in python3 python py; do
+for candidate in $CANDIDATES; do
     case $candidate in
         py) probe="py -3" ;;
         *)  probe=$candidate ;;
@@ -32,16 +44,8 @@ for candidate in python3 python py; do
 done
 
 if [ -z "$PY" ]; then
-    echo "No Python 3 interpreter found (tried python3, python, py -3)." >&2
+    echo "No Python 3 interpreter found (tried: $CANDIDATES)." >&2
     echo "Install Python 3.9 or newer and re-run." >&2
-    exit 2
-fi
-
-if ! $PY -c 'import openpyxl' 2>/dev/null; then
-    echo "openpyxl is required to read the object-model snapshot." >&2
-    echo "Install it with:  $PY -m pip install openpyxl" >&2
-    echo "On a Homebrew or system Python that refuses this, add --user or" >&2
-    echo "--break-system-packages, or run the skill inside a virtualenv." >&2
     exit 2
 fi
 

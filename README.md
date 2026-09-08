@@ -33,21 +33,22 @@ call summary, a draft demo script or a use-case description for a Creatio demo.
 
 ```
 skills/demo-scenario-writer/
-  SKILL.md                              the flow: intake, decompose, verify, write
-  reference/format.md                   the document contract (five sections, banned words)
-  reference/best-practices.md           what to specify, what to decide instead of asking
-  reference/golden-use-case.md          one worked use case to match for density
-  reference/anti-examples.md            real failures and their fixes
-  scripts/model.sh                      cross-platform launcher for the query script
-  scripts/model.py                      query the object-model snapshot
-  assets/creatio-object-model.xlsx      standard object model
-  assets/creatio-banking-object-model.xlsx   FinServ / banking object model
+  SKILL.md                    the flow: intake, decompose, verify, write
+  reference/format.md         the document contract (five sections, banned words)
+  reference/best-practices.md what to specify, what to decide instead of asking
+  reference/golden-use-case.md one worked use case to match for density
+  reference/anti-examples.md  real failures and their fixes
+  scripts/model.sh            cross-platform launcher for the query script
+  scripts/model.py            query the object-model snapshot
+  assets/general/             compiled standard object model
+  assets/banking/             compiled FinServ / banking object model
+snapshots/*.xlsx              the raw exports the assets are compiled from
+tools/build-model.py          the compiler (maintainers only)
 ```
 
 `scripts/model.sh` is the verification path — objects, lookups, fields,
 sections, free-text search, with `--banking` selecting the financial-services
-snapshot. Exit code 1 means not verified. The xlsx files are never read
-directly; they run to 17 000 rows.
+snapshot. Exit code 1 means not verified.
 
 ```bash
 sh scripts/model.sh object Case
@@ -59,23 +60,38 @@ sh scripts/model.sh sections
 
 ## Requirements
 
-Python 3.9 or newer with `openpyxl`. The launcher works the same on macOS, Linux
-and Windows: it finds a real Python 3 whatever it happens to be called on that
-machine — `python3` on macOS and Linux, `python` or `py -3` on Windows, where
-`python3` is usually the Microsoft Store stub that prints an advert and exits 49
-— and it resolves the snapshots relative to itself, so the command runs from any
-directory. On Windows use it from Git Bash or WSL, which is where Claude Code
-runs shell commands anyway.
+Python 3.9 or newer, and nothing else. The launcher works the same on macOS,
+Linux and Windows: it finds a real Python 3 whatever it happens to be called on
+that machine — `python3` on macOS and Linux, `python` or `py -3` on Windows,
+where `python3` is usually the Microsoft Store stub that prints an advert and
+exits 49 — and it resolves the snapshots relative to itself, so the command runs
+from any directory. On Windows use it from Git Bash or WSL, which is where
+Claude Code runs shell commands anyway.
 
-If `openpyxl` is missing, both the launcher and the script print the exact
-install command for the interpreter they found:
+## The compiled snapshots
+
+The skill queries three gzipped TSV tables per model rather than the xlsx
+exports, because a query is a hot path: the scenario is verified name by name,
+dozens of calls per document. Parsing xlsx cost `openpyxl` plus 870 ms per call;
+the compiled tables cost 25 ms and only the standard library, which is also what
+lets the launcher skip probing for a dependency. Three columns are dropped along
+the way — two captions that repeat the objects table on every one of 36 000 rows,
+and the lookup `Record Id` column, which is GUIDs the skill is forbidden to emit.
+So are the 65 lookup rows whose display value is NULL: the old reader printed
+those as the literal text `None`, and for two lookups every captured row was
+blank, so it reported them as verified with a list of `None`s. Both models
+together come to 0.36 MB, down from 2.49 MB.
+
+To regenerate after replacing a snapshot in `snapshots/` (needs `openpyxl`,
+the only dependency left anywhere in the repo):
 
 ```bash
-python3 -m pip install openpyxl
+python tools/build-model.py
 ```
 
-A Homebrew or system Python that refuses that needs `--user`,
-`--break-system-packages`, or a virtualenv.
+It asserts that every dropped column really is recoverable before dropping it,
+so a future export that breaks the assumption fails the build instead of
+quietly losing data.
 
 ## Related
 

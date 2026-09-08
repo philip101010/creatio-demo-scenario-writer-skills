@@ -7,11 +7,12 @@ lookup value exists. Never answer these questions from memory.
 
 Invoke it through `scripts/model.sh`, which picks the right interpreter name for
 the platform. Calling this file directly works too, wherever `python3` is a real
-Python 3 (it is not on most Windows machines).
+Python 3 (it is not on most Windows machines). Nothing outside the standard
+library is needed; the assets are pre-compiled by tools/build-model.py.
 
 Usage
 -----
-  sh scripts/model.sh object <ObjectName|Caption> [--banking]
+  sh scripts/model.sh object <ObjectName|Caption> [--all] [--banking]
   sh scripts/model.sh field  <substring> [--object <ObjectName|Caption>] [--banking]
   sh scripts/model.sh lookup <LookupObject|Caption> [--banking]
   sh scripts/model.sh sections [--banking]
@@ -35,46 +36,87 @@ Exit codes
 """
 
 import argparse
+import csv
+import gzip
 import os
 import sys
 
-try:
-    import openpyxl
-except ImportError:
-    sys.exit(
-        "openpyxl is required. Install it with:\n"
-        "  %s -m pip install openpyxl\n"
-        "A Homebrew or system Python that refuses this needs --user or\n"
-        "--break-system-packages, or a virtualenv." % sys.executable
-    )
-
 HERE = os.path.dirname(os.path.abspath(__file__))
 ASSETS = os.path.join(os.path.dirname(HERE), "assets")
-GENERAL = os.path.join(ASSETS, "creatio-object-model.xlsx")
-BANKING = os.path.join(ASSETS, "creatio-banking-object-model.xlsx")
 
-
-def load(banking):
-    path = BANKING if banking else GENERAL
-    if not os.path.exists(path):
-        sys.exit("Model snapshot not found: %s" % path)
-    return openpyxl.load_workbook(path, read_only=True, data_only=True)
-
-
-def rows(wb, sheet):
-    ws = wb[sheet]
-    it = ws.iter_rows(values_only=True)
-    next(it, None)  # header
-    for r in it:
-        if r and any(c is not None for c in r):
-            yield r
+# Present on every object and never part of a demo spec. Hidden from the object
+# dump unless --all; a substring search still finds them.
+SYSTEM_FIELDS = frozenset(
+    ["id", "createdon", "createdbyid", "modifiedon", "modifiedbyid",
+     "processlisteners"]
+)
 
 
 def norm(s):
     return (s or "").strip().lower()
 
 
-def resolve_object(wb, name):
+class Model(object):
+    """The three compiled tables, each read the first time it is asked for."""
+
+    def __init__(self, model):
+        self.name = model
+        self.dir = os.path.join(ASSETS, model)
+        self._cache = {}
+
+    def _table(self, table):
+        if table not in self._cache:
+            path = os.path.join(self.dir, "%s.tsv.gz" % table)
+            if not os.path.exists(path):
+                sys.exit(
+                    "Compiled snapshot missing: %s\n"
+                    "Rebuild it with: python tools/build-model.py" % path
+                )
+            with gzip.open(path, "rt", encoding="utf-8", newline="") as fh:
+                reader = csv.reader(fh, delimiter="\t")
+                next(reader, None)  # header
+                self._cache[table] = [tuple(row) for row in reader]
+        return self._cache[table]
+
+    @property
+    def objects(self):
+        return self._table("objects")
+
+    @property
+    def fields(self):
+        return self._table("fields")
+
+    def fields_of(self, obj):
+        by_object = self._cache.get("_fields_by_object")
+        if by_object is None:
+            by_object = {}
+            for row in self.fields:
+                by_object.setdefault(norm(row[0]), []).append(row)
+            self._cache["_fields_by_object"] = by_object
+        return by_object.get(norm(obj), [])
+
+    def values_of(self, obj):
+        by_object = self._cache.get("_values_by_object")
+        if by_object is None:
+            by_object = {}
+            for row in self._table("lookups"):
+                by_object.setdefault(norm(row[0]), []).append(row[1])
+            self._cache["_values_by_object"] = by_object
+        return by_object.get(norm(obj), [])
+
+    def caption(self, obj_name):
+        captions = self._cache.get("_captions")
+        if captions is None:
+            captions = {norm(o[0]): o[1] for o in self.objects}
+            self._cache["_captions"] = captions
+        return captions.get(norm(obj_name), "")
+
+
+def load(banking):
+    return Model("banking" if banking else "general")
+
+
+def resolve_object(m, name):
     """Resolve a user-supplied string to one Objects row.
 
     An exact match on the object name always wins over a caption match.
@@ -82,10 +124,10 @@ def resolve_object(wb, name):
     candidates when the string matched several rows by caption.
     """
     t = norm(name)
-    by_name = [r for r in rows(wb, "Objects") if norm(r[0]) == t]
+    by_name = [r for r in m.objects if norm(r[0]) == t]
     if by_name:
         return by_name[0], [r[0] for r in by_name[1:]]
-    by_caption = [r for r in rows(wb, "Objects") if norm(r[1]) == t]
+    by_caption = [r for r in m.objects if norm(r[1]) == t]
     if by_caption:
         return by_caption[0], [r[0] for r in by_caption[1:]]
     return None, []
@@ -102,57 +144,57 @@ def note_ambiguity(kind, value, others):
 # ---------------------------------------------------------------- commands
 
 
-def cmd_object(wb, name):
-    meta, others = resolve_object(wb, name)
+def cmd_object(m, name, show_all):
+    meta, others = resolve_object(m, name)
     if meta is None:
         print("NOT VERIFIED: object %r is not in this snapshot." % name)
         print("Try: sh scripts/model.sh search %s" % name)
         return 1
     note_ambiguity("object", name, others)
 
-    obj_name, caption, has_section, sections, n_fields, n_lookups = (
-        list(meta) + [None] * 6
-    )[:6]
+    obj_name, caption, has_section, sections, n_fields, n_lookups = meta
     print("Object:   %s (%s)" % (obj_name, caption))
     print("Section:  %s%s" % (has_section, (" -> " + sections) if sections else ""))
     print("Fields:   %s (%s lookup)" % (n_fields, n_lookups))
     print()
 
-    found = [r for r in rows(wb, "Fields") if norm(r[0]) == norm(obj_name)]
+    found = m.fields_of(obj_name)
+    shown = found if show_all else [
+        r for r in found if norm(r[1]) not in SYSTEM_FIELDS
+    ]
 
     print("%-34s %-28s %-4s %s" % ("FIELD", "TYPE", "REQ", "LOOKUP TARGET"))
     print("-" * 100)
-    for r in found:
-        _, _, fname, dtype, req, is_lk, lk_obj, lk_cap, _ = (list(r) + [None] * 9)[:9]
-        tgt = ("%s (%s)" % (lk_obj, lk_cap)) if is_lk == "Yes" and lk_obj else ""
-        print("%-34s %-28s %-4s %s" % (fname, dtype or "", req or "", tgt))
+    for row in shown:
+        fname, dtype, req, lk_obj = row[1], row[2], row[3], row[4]
+        target = ("%s (%s)" % (lk_obj, m.caption(lk_obj))) if lk_obj else ""
+        print("%-34s %-28s %-4s %s" % (fname, dtype, req, target))
     print()
-    print(
-        "%d fields listed. Lookup values: sh scripts/model.sh lookup <LookupObject>"
-        % len(found)
-    )
+    hidden = len(found) - len(shown)
+    if hidden:
+        print("%d fields listed, %d system fields hidden (--all shows them)."
+              % (len(shown), hidden))
+    else:
+        print("%d fields listed." % len(shown))
+    print("Lookup values: sh scripts/model.sh lookup <LookupObject>")
     return 0
 
 
-def cmd_field(wb, substring, obj):
+def cmd_field(m, substring, obj):
     obj_name = None
     if obj:
-        meta, others = resolve_object(wb, obj)
+        meta, others = resolve_object(m, obj)
         if meta is None:
             print("NOT VERIFIED: object %r is not in this snapshot." % obj)
             print("The field question cannot be answered until the object exists.")
             print("Try: sh scripts/model.sh search %s" % obj)
             return 1
         note_ambiguity("object", obj, others)
-        obj_name = norm(meta[0])
+        obj_name = meta[0]
 
     sub = norm(substring)
-    hits = []
-    for r in rows(wb, "Fields"):
-        if obj_name and norm(r[0]) != obj_name:
-            continue
-        if sub in norm(r[2]):
-            hits.append(r)
+    pool = m.fields_of(obj_name) if obj_name else m.fields
+    hits = [r for r in pool if sub in norm(r[1])]
 
     if not hits:
         print(
@@ -166,64 +208,97 @@ def cmd_field(wb, substring, obj):
         % ("OBJECT", "FIELD", "TYPE", "REQ", "LOOKUP TARGET")
     )
     print("-" * 120)
-    for r in hits[:400]:
-        o, _, fname, dtype, req, is_lk, lk_obj, _, _ = (list(r) + [None] * 9)[:9]
-        tgt = lk_obj if is_lk == "Yes" and lk_obj else ""
-        print("%-26s %-32s %-26s %-4s %s" % (o, fname, dtype or "", req or "", tgt))
+    for row in hits[:400]:
+        print("%-26s %-32s %-26s %-4s %s"
+              % (row[0], row[1], row[2], row[3], row[4]))
     if len(hits) > 400:
         print("... %d more, narrow with --object" % (len(hits) - 400))
     return 0
 
 
-def cmd_lookup(wb, name):
-    t = norm(name)
-    vals = [r for r in rows(wb, "Lookup Values")
-            if norm(r[0]) == t or norm(r[1]) == t]
-    if vals:
-        print("Lookup: %s (%s) - %d values" % (vals[0][0], vals[0][1], len(vals)))
+def lookup_note(m, obj_name):
+    """Why a lookup object in the snapshot carries no values.
+
+    The Fields table records this per referencing field. The snapshot skipped
+    lookups over 500 rows, so 'too large' means values certainly exist and were
+    not captured - a different finding from a lookup that is genuinely empty.
+    """
+    notes = set()
+    for row in m.fields:
+        if norm(row[4]) == norm(obj_name) and row[5]:
+            notes.add(row[5])
+    # 'too large' is the one note that means values definitely exist, so it wins
+    # over any other note left on a sibling field.
+    for note in sorted(notes):
+        if note.startswith("too large"):
+            return note
+    return sorted(notes)[0] if notes else ""
+
+
+def cmd_lookup(m, name):
+    meta, others = resolve_object(m, name)
+    obj_name = meta[0] if meta is not None else name
+    values = m.values_of(obj_name)
+
+    if values:
+        note_ambiguity("lookup object", name, others)
+        print("Lookup: %s (%s) - %d values"
+              % (obj_name, m.caption(obj_name), len(values)))
         print("-" * 60)
-        for r in vals:
-            print(r[2])
+        for value in values:
+            print(value)
         return 0
 
-    # No values. Distinguish "object absent" from "object present but empty".
-    meta, _ = resolve_object(wb, name)
+    # No values. Distinguish "object absent" from "present but not captured".
     if meta is None:
         print("NOT VERIFIED: lookup object %r is not in this snapshot." % name)
         print("Try: sh scripts/model.sh search %s" % name)
+        print("Do not invent values. Raise an ?OPEN.")
+        return 1
+
+    note = lookup_note(m, obj_name)
+    print("NOT VERIFIED: lookup object %s (%s) exists, but this snapshot holds "
+          "no values for it." % (obj_name, meta[1]))
+    if note.startswith("too large"):
+        print("Reason: %s. The snapshot captured lookups of up to 500 rows only, "
+              "so this one HAS values - they were not exported." % note)
+        print("Do not invent values. Ask the engineer to read them off the "
+              "instance, or specify only the ones the demo needs.")
+        return 1
+    if note == "captured":
+        print("The export did read this lookup and every row it returned was "
+              "blank, so there is no display value to quote.")
+    elif note:
+        print("Reason: %s." % note)
     else:
-        print(
-            "NOT VERIFIED: lookup object %s (%s) exists, but this snapshot holds "
-            "no values for it." % (meta[0], meta[1])
-        )
         print("It may be empty on that instance, or filled per project.")
     print("Do not invent values. Raise an ?OPEN.")
     return 1
 
 
-def cmd_sections(wb):
+def cmd_sections(m):
     print("%-26s %-30s %s" % ("OBJECT", "CAPTION", "SECTION(S)"))
     print("-" * 100)
     n = 0
-    for r in rows(wb, "Objects"):
-        if r[2] == "Yes":
+    for row in m.objects:
+        if row[2] == "Yes":
             n += 1
-            print("%-26s %-30s %s" % (r[0], r[1] or "", r[3] or ""))
+            print("%-26s %-30s %s" % (row[0], row[1], row[3]))
     print()
     print("%d objects with sections." % n)
     return 0
 
 
-def cmd_search(wb, substring):
+def cmd_search(m, substring):
     sub = norm(substring)
-    hits = [r for r in rows(wb, "Objects") if sub in norm(r[0]) or sub in norm(r[1])]
+    hits = [r for r in m.objects if sub in norm(r[0]) or sub in norm(r[1])]
     if not hits:
         print("NOT VERIFIED: no object matching %r in this snapshot." % substring)
         return 1
     print("%-30s %-34s %-8s %s" % ("OBJECT", "CAPTION", "SECTION", "# FIELDS"))
     print("-" * 100)
-    for r in hits[:200]:
-        print("%-30s %-34s %-8s %s" % (r[0], r[1] or "", r[2] or "", r[4] or ""))
+    for row in hits[:200]:
+        print("%-30s %-34s %-8s %s" % (row[0], row[1], row[2], row[4]))
     if len(hits) > 200:
         print("... %d more" % (len(hits) - 200))
     return 0
@@ -241,6 +316,8 @@ def run():
     p.add_argument("value", nargs="?", default=None)
     p.add_argument("--object", dest="obj", default=None,
                    help="restrict a field search to one object (field command only)")
+    p.add_argument("--all", action="store_true",
+                   help="include system fields in the object dump (object only)")
     p.add_argument("--banking", action="store_true",
                    help="use the banking / finserv snapshot")
     a = p.parse_args()
@@ -253,20 +330,19 @@ def run():
 
     if a.obj and a.command != "field":
         p.error("--object applies only to the 'field' command")
+    if a.all and a.command != "object":
+        p.error("--all applies only to the 'object' command")
 
-    wb = load(a.banking)
-    try:
-        if a.command == "object":
-            return cmd_object(wb, a.value)
-        if a.command == "field":
-            return cmd_field(wb, a.value, a.obj)
-        if a.command == "lookup":
-            return cmd_lookup(wb, a.value)
-        if a.command == "sections":
-            return cmd_sections(wb)
-        return cmd_search(wb, a.value)
-    finally:
-        wb.close()
+    m = load(a.banking)
+    if a.command == "object":
+        return cmd_object(m, a.value, a.all)
+    if a.command == "field":
+        return cmd_field(m, a.value, a.obj)
+    if a.command == "lookup":
+        return cmd_lookup(m, a.value)
+    if a.command == "sections":
+        return cmd_sections(m)
+    return cmd_search(m, a.value)
 
 
 def main():

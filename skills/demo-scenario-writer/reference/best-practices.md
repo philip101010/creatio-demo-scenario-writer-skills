@@ -153,13 +153,15 @@ This list is why you can say no. Add to it whenever the team hits a new wall.
 - **Renaming a lookup value changes it everywhere.** If the scenario needs the
   old caption somewhere else in the same demo, that is an `?OPEN`.
 - **Never output a GUID or a record Id.** The engineer resolves every lookup by
-  name. The snapshot contains Record Ids; they are for verification only.
+  name. The snapshot carries no record Ids at all, so there is nothing to leak
+  even by accident.
 
 ---
 
 ## 4. Object model — how to verify
 
-The snapshot in `assets/` is a live export.
+The snapshot in `assets/` is a live export, compiled into three tab-separated
+tables per model — objects, fields and lookup values.
 
 | Model | Objects | Fields | Lookup values | Objects with a section |
 |---|---|---|---|---|
@@ -170,7 +172,7 @@ Use the banking model when the client is a bank, an insurer or any financial
 services firm; the general model otherwise. State which one you used in the
 Demo card.
 
-Never read the xlsx yourself. Query it:
+Never open the compiled tables yourself. Query them:
 
 ```bash
 sh scripts/model.sh object Case              # all fields of an object
@@ -179,10 +181,18 @@ sh scripts/model.sh field priority --object Case
 sh scripts/model.sh search opportunit       # find an object by name
 sh scripts/model.sh sections                # every object with a UI section
 sh scripts/model.sh object Loan --banking
+sh scripts/model.sh object Case --all       # + Id, CreatedOn/By, ModifiedOn/By
 ```
 
+`object` hides the six system columns every object carries — `Id`, `CreatedOn`,
+`CreatedById`, `ModifiedOn`, `ModifiedById`, `ProcessListeners`. They are never
+part of a demo spec. `--all` shows them; a `field` search finds them regardless.
+
 Exit code 1 means **not verified** — either it is absent from the snapshot, or it
-is present but empty there. The message tells you which. Both outcomes mean the
+is present but empty there. The message tells you which — and for a lookup it
+says why, which matters: `too large (N rows)` means the lookup certainly HAS
+values and the export skipped them at the 500-row cap, so the answer is to have
+them read off the instance, not to treat the lookup as empty. Both outcomes mean the
 same thing for your draft: `?OPEN`, never a guess. A finding from one snapshot
 never carries over to the other; the two models differ, sometimes sharply —
 `Order` and `Invoice` do not exist in the banking model at all, and

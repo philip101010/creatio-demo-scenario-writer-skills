@@ -10,7 +10,7 @@
       "name": "creatio-demo-scenario-writer",
       "source": "./",
       "description": "Consultant demo notes to a build-ready Creatio demo scenario",
-      "version": "1.0.1"
+      "version": "1.1.0"
     }
   ]
 }
