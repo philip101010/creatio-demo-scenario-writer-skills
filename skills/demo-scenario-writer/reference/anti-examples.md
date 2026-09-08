@@ -74,7 +74,7 @@ telephony. Nothing about providers, nothing about what writes what.
 
 > **Good** — "?OPEN — consultant. What counts as an RMA for this client? The Order object carries no return or type column, so the metric has no source."
 
-`python3 scripts/model.py object Order` lists 32 fields. None is a type. The line
+`sh scripts/model.sh object Order` lists 32 fields. None is a type. The line
 was written because it sounded right. Note the addressee: this is not a mechanism
 question for the engineer, it is a question about what the client means.
 

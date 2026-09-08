@@ -38,23 +38,44 @@ skills/demo-scenario-writer/
   reference/best-practices.md           what to specify, what to decide instead of asking
   reference/golden-use-case.md          one worked use case to match for density
   reference/anti-examples.md            real failures and their fixes
+  scripts/model.sh                      cross-platform launcher for the query script
   scripts/model.py                      query the object-model snapshot
   assets/creatio-object-model.xlsx      standard object model
   assets/creatio-banking-object-model.xlsx   FinServ / banking object model
 ```
 
-`scripts/model.py` is the verification path — objects, lookups, fields,
+`scripts/model.sh` is the verification path — objects, lookups, fields,
 sections, free-text search, with `--banking` selecting the financial-services
 snapshot. Exit code 1 means not verified. The xlsx files are never read
 directly; they run to 17 000 rows.
 
 ```bash
-python3 scripts/model.py object Case
-python3 scripts/model.py lookup CaseStatus --banking
-python3 scripts/model.py field priority --object Case
-python3 scripts/model.py search opportunit
-python3 scripts/model.py sections
+sh scripts/model.sh object Case
+sh scripts/model.sh lookup CaseStatus --banking
+sh scripts/model.sh field priority --object Case
+sh scripts/model.sh search opportunit
+sh scripts/model.sh sections
 ```
+
+## Requirements
+
+Python 3.9 or newer with `openpyxl`. The launcher works the same on macOS, Linux
+and Windows: it finds a real Python 3 whatever it happens to be called on that
+machine — `python3` on macOS and Linux, `python` or `py -3` on Windows, where
+`python3` is usually the Microsoft Store stub that prints an advert and exits 49
+— and it resolves the snapshots relative to itself, so the command runs from any
+directory. On Windows use it from Git Bash or WSL, which is where Claude Code
+runs shell commands anyway.
+
+If `openpyxl` is missing, both the launcher and the script print the exact
+install command for the interpreter they found:
+
+```bash
+python3 -m pip install openpyxl
+```
+
+A Homebrew or system Python that refuses that needs `--user`,
+`--break-system-packages`, or a virtualenv.
 
 ## Related
 

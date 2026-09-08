@@ -5,22 +5,26 @@ Query the Creatio object-model snapshot that ships with this skill.
 The snapshot is the ONLY source of truth for whether an object, a field or a
 lookup value exists. Never answer these questions from memory.
 
+Invoke it through `scripts/model.sh`, which picks the right interpreter name for
+the platform. Calling this file directly works too, wherever `python3` is a real
+Python 3 (it is not on most Windows machines).
+
 Usage
 -----
-  python3 scripts/model.py object <ObjectName|Caption> [--banking]
-  python3 scripts/model.py field  <substring> [--object <ObjectName|Caption>] [--banking]
-  python3 scripts/model.py lookup <LookupObject|Caption> [--banking]
-  python3 scripts/model.py sections [--banking]
-  python3 scripts/model.py search <substring> [--banking]
+  sh scripts/model.sh object <ObjectName|Caption> [--banking]
+  sh scripts/model.sh field  <substring> [--object <ObjectName|Caption>] [--banking]
+  sh scripts/model.sh lookup <LookupObject|Caption> [--banking]
+  sh scripts/model.sh sections [--banking]
+  sh scripts/model.sh search <substring> [--banking]
 
 Examples
 --------
-  python3 scripts/model.py object Case
-  python3 scripts/model.py field priority --object Case
-  python3 scripts/model.py lookup CaseStatus
-  python3 scripts/model.py search opportunit
-  python3 scripts/model.py sections
-  python3 scripts/model.py object Loan --banking
+  sh scripts/model.sh object Case
+  sh scripts/model.sh field priority --object Case
+  sh scripts/model.sh lookup CaseStatus
+  sh scripts/model.sh search opportunit
+  sh scripts/model.sh sections
+  sh scripts/model.sh object Loan --banking
 
 Exit codes
 ----------
@@ -37,7 +41,12 @@ import sys
 try:
     import openpyxl
 except ImportError:
-    sys.exit("openpyxl is required: pip install openpyxl --break-system-packages")
+    sys.exit(
+        "openpyxl is required. Install it with:\n"
+        "  %s -m pip install openpyxl\n"
+        "A Homebrew or system Python that refuses this needs --user or\n"
+        "--break-system-packages, or a virtualenv." % sys.executable
+    )
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ASSETS = os.path.join(os.path.dirname(HERE), "assets")
@@ -97,7 +106,7 @@ def cmd_object(wb, name):
     meta, others = resolve_object(wb, name)
     if meta is None:
         print("NOT VERIFIED: object %r is not in this snapshot." % name)
-        print("Try: python3 scripts/model.py search %s" % name)
+        print("Try: sh scripts/model.sh search %s" % name)
         return 1
     note_ambiguity("object", name, others)
 
@@ -119,7 +128,7 @@ def cmd_object(wb, name):
         print("%-34s %-28s %-4s %s" % (fname, dtype or "", req or "", tgt))
     print()
     print(
-        "%d fields listed. Lookup values: python3 scripts/model.py lookup <LookupObject>"
+        "%d fields listed. Lookup values: sh scripts/model.sh lookup <LookupObject>"
         % len(found)
     )
     return 0
@@ -132,7 +141,7 @@ def cmd_field(wb, substring, obj):
         if meta is None:
             print("NOT VERIFIED: object %r is not in this snapshot." % obj)
             print("The field question cannot be answered until the object exists.")
-            print("Try: python3 scripts/model.py search %s" % obj)
+            print("Try: sh scripts/model.sh search %s" % obj)
             return 1
         note_ambiguity("object", obj, others)
         obj_name = norm(meta[0])
@@ -181,7 +190,7 @@ def cmd_lookup(wb, name):
     meta, _ = resolve_object(wb, name)
     if meta is None:
         print("NOT VERIFIED: lookup object %r is not in this snapshot." % name)
-        print("Try: python3 scripts/model.py search %s" % name)
+        print("Try: sh scripts/model.sh search %s" % name)
     else:
         print(
             "NOT VERIFIED: lookup object %s (%s) exists, but this snapshot holds "

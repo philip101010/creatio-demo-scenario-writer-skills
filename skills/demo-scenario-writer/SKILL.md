@@ -91,14 +91,20 @@ use case needs it. This is what removes the dependencies between use cases.
 Before writing any build-spec line, check it:
 
 ```bash
-python3 scripts/model.py object Case
-python3 scripts/model.py lookup CaseStatus
-python3 scripts/model.py field priority --object Case
-python3 scripts/model.py search opportunit
-python3 scripts/model.py sections
+sh scripts/model.sh object Case
+sh scripts/model.sh lookup CaseStatus
+sh scripts/model.sh field priority --object Case
+sh scripts/model.sh search opportunit
+sh scripts/model.sh sections
 ```
 
 Add `--banking` for financial services clients.
+
+Run these from this skill's own directory — `scripts/` and `assets/` are
+relative to it. `model.sh` works the same on macOS, Linux and Windows: it finds
+a real Python 3 whatever it is called on that machine and locates the snapshots
+relative to itself. If it reports no interpreter or a missing `openpyxl`, say so
+and stop; do not proceed to write build-spec lines you could not verify.
 
 Every object, field, lookup and lookup value gets checked. Exit code 1 means
 **not verified** — absent from the snapshot, or present but empty in it. A

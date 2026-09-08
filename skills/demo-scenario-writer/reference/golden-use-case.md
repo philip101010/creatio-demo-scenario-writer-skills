@@ -81,7 +81,7 @@ duplication that turns a scenario into seven thousand words.
 
 **Every existing thing is marked, and the marking is verified.** "existing lookup
 CaseOrigin, value 'Call' exists" was checked with
-`python3 scripts/model.py lookup CaseOrigin`. Nothing is asserted from memory.
+`sh scripts/model.sh lookup CaseOrigin`. Nothing is asserted from memory.
 
 **The missing lookup value was decided, not asked.** "Information request" is not
 in CaseCategory. An earlier draft asked the consultant whether to add it, rename

@@ -173,12 +173,12 @@ Demo card.
 Never read the xlsx yourself. Query it:
 
 ```bash
-python3 scripts/model.py object Case              # all fields of an object
-python3 scripts/model.py lookup CaseStatus       # all values of a lookup
-python3 scripts/model.py field priority --object Case
-python3 scripts/model.py search opportunit       # find an object by name
-python3 scripts/model.py sections                # every object with a UI section
-python3 scripts/model.py object Loan --banking
+sh scripts/model.sh object Case              # all fields of an object
+sh scripts/model.sh lookup CaseStatus       # all values of a lookup
+sh scripts/model.sh field priority --object Case
+sh scripts/model.sh search opportunit       # find an object by name
+sh scripts/model.sh sections                # every object with a UI section
+sh scripts/model.sh object Loan --banking
 ```
 
 Exit code 1 means **not verified** — either it is absent from the snapshot, or it
@@ -222,7 +222,7 @@ sections, pages, dashboards and rights out of the box.
 | Workplace | **SysModuleFolder** |
 | Campaign, bulk email, landing page | **Campaign**, **BulkEmail**, **LandingPage** |
 
-`python3 scripts/model.py sections` lists every object that has a section — 67
+`sh scripts/model.sh sections` lists every object that has a section — 67
 in the general model, 81 in the banking one. If the need is on that list, do not
 create a new object without saying why.
 
