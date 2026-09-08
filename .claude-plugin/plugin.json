@@ -1,0 +1,18 @@
+{
+  "name": "creatio-demo-scenario-writer",
+  "version": "1.0.0",
+  "displayName": "Creatio Demo Scenario Writer",
+  "description": "Turn a solution consultant's free-form demo notes into a build-ready Creatio demo scenario: modular use cases, a single happy path, every object, field and lookup verified against a bundled Creatio object-model snapshot, and genuinely unresolved points raised as addressed open questions instead of invented functionality.",
+  "author": {
+    "name": "Philip Shatunov SE @Creatio",
+    "email": "f.shatunov@creatio.com"
+  },
+  "homepage": "https://github.com/philip101010/creatio-demo-scenario-writer",
+  "keywords": [
+    "creatio",
+    "demo",
+    "scenario",
+    "presales",
+    "solution-engineering"
+  ]
+}

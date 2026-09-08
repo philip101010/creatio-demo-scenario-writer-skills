@@ -1,0 +1,16 @@
+{
+  "name": "creatio-demo-scenario-writer",
+  "owner": {
+    "name": "Philip Shatunov SE @Creatio",
+    "email": "f.shatunov@creatio.com"
+  },
+  "description": "Creatio presales scenario authoring",
+  "plugins": [
+    {
+      "name": "creatio-demo-scenario-writer",
+      "source": "./",
+      "description": "Consultant demo notes to a build-ready Creatio demo scenario",
+      "version": "1.0.0"
+    }
+  ]
+}
