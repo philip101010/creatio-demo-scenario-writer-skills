@@ -87,6 +87,30 @@ one screen → a case is registered without leaving it*
 >   the field is left off the tab**, and the tab holds five metrics instead of
 >   six.
 
+### At the end of the scenario file
+
+```
+## Basis vs. nice-to-have
+
+A starting point for prioritisation, from the scenario. The €/time impact of
+each item still needs to be quantified by the commercial team.
+
+| Item | Classification | Note |
+|---|---|---|
+| Caller resolution and screen-pop on an inbound call (UC1) | Basis | The "you already know me" moment the whole use case is built on |
+| Case registration from a mini page without leaving the contact (UC1) | Basis | Removes the screen-hopping they described |
+| Incoming-call count on the contact (UC1) | Basis | One rule; feeds the treat-carefully decision |
+| NPS and Champion on the KYC tab (UC1) | Nice-to-have | Seeded values; the flow runs without them |
+| RMA count on the KYC tab (UC1) | Open — client to decide | No source until Q1 is answered |
+```
+
+Four rows of the five come straight from the removal test. Take the screen-pop
+away and step 2 has nothing to show, so it is basis. Take NPS and Champion away
+and every step still runs — the second bubble just makes a smaller claim — so
+they are nice-to-have, however good they look on the tab. The consultant may
+well flip that one, and if they do, it is basis: they were on the call and we
+were not.
+
 ---
 
 ## The consultant's original text

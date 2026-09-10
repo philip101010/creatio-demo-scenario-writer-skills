@@ -102,6 +102,12 @@ Use the mechanism names from `best-practices.md` section 1 exactly — page
 business rule, entity business rule, business process, DCM case, approval,
 printable. The coding agent builds by those names.
 
+A line serving a capability the consultant classified as nice-to-have in the
+scenario's *Basis vs. nice-to-have* table ends with `[nice-to-have]`. That is
+the build order made explicit: everything unmarked is basis and gets built
+first, and a build that runs out of time stops at the marks rather than
+wherever it happened to be.
+
 ---
 
 ## 6 · Seed data

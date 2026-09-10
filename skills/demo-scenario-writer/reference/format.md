@@ -32,11 +32,12 @@ v<n> · <date> · <N> use cases
 
 ## What I changed
 ## Open questions
+## Basis vs. nice-to-have
 ```
 
 No purpose section, no goals, no brief summary, no attachments, no closing
 notes, no object tables, no acceptance table. The reasons for the last two are
-in section 7.
+in section 8.
 
 ---
 
@@ -231,7 +232,65 @@ stating the default rather than leaving a hole.
 
 ---
 
-## 7. What this format deliberately does not have
+## 7. Basis vs. nice-to-have
+
+The last section of the document, and the only one whose content is not yours to
+decide. A demo scenario is also a scope proposal: some of what it shows is what
+the customer is buying, and some of it is you being generous. Left implicit, the
+generous half gets built, presented, and then quoted as if it were included.
+
+One table, one row per demonstrable capability, each row naming the use cases
+that need it:
+
+```
+## Basis vs. nice-to-have
+
+A starting point for prioritisation, from the scenario. The €/time impact of
+each item still needs to be quantified by the commercial team.
+
+| Item | Classification | Note |
+|---|---|---|
+| Calculation-to-document generation (UC1) | Basis | Directly addresses the two biggest pain points in Prepare/Write |
+| Approval matrix enforcement by order value (UC3) | Basis | Matrix already exists; enforcement is the gap |
+| Hard stop on an unapproved issue (UC4) | Open — J-Tec to decide | Procedure already exists; enforcement is optional pending a decision |
+| Customer portal | Nice-to-have | Explicitly parked for a later phase |
+```
+
+### The three classifications
+
+| Classification | Means |
+|---|---|
+| **Basis** | remove it and a step in the scenario stops working |
+| **Nice-to-have** | remove it and every step still runs; only a bubble's claim gets smaller |
+| **Open — `<who>` to decide** | it needs a decision on the customer's side, and the name of who decides is part of the value |
+
+That first test is mechanical, and it is why this table can be drafted rather
+than invented: walk the steps, remove the capability, and see whether a chain
+still ends on something visible. An item that only weakens the narration is not
+basis, however much the consultant likes it.
+
+### Who fills it in
+
+**You draft it; the consultant decides it.** Propose a classification for every
+row with the one-line reason in *Note*, then interview them on it — see
+`question-gate.md`, Tier C. What comes back is theirs, including the rows they
+flip against your reasoning. Never quantify the money or the effort: the intro
+line says the commercial team owns that, and it means it.
+
+An item the consultant will not classify becomes `Open — <who> to decide`, not
+a guess and not a blank. A blank cell here is the same defect as a highlight in
+the prose: nobody owns it.
+
+### Granularity
+
+One row per capability a step actually demonstrates, not one per field and not
+one per use case. If two use cases need the same capability, it is one row
+naming both. The table is usually eight to fourteen rows for a five-use-case
+scenario; past twenty you are listing configuration rather than capabilities.
+
+---
+
+## 8. What this format deliberately does not have
 
 **No object or field tables.** They are in the objects file, whose reader is a
 coding agent. A consultant reading past a column-type table is a consultant not
@@ -248,7 +307,7 @@ without another use case having been run first.
 
 ---
 
-## 8. Banned words
+## 9. Banned words
 
 Reject your own draft if it contains any of these, and rewrite:
 
@@ -261,7 +320,7 @@ Reject your own draft if it contains any of these, and rewrite:
 
 ---
 
-## 9. Delivery
+## 10. Delivery
 
 Two Markdown files, UTF-8, in the working directory:
 
@@ -280,7 +339,8 @@ Markdown only, and only this much of it: `#` for the title, `##` for the
 sections and use cases, `###` for phases, `>` for bubbles, numbered lists for
 steps, `-` for every other list, `**bold**` for element and value names,
 `*italic*` for the flow line and provenance, backticks for a name that could be
-read as prose. Pipe tables only in the objects file.
+read as prose. Exactly one pipe table in this file — *Basis vs. nice-to-have*;
+every other table belongs in the objects file.
 
 No raw HTML, no images, no footnotes, no colour, no highlighting. A doubt that a
 highlight would have carried is an open question with a default — the only form
@@ -288,7 +348,7 @@ a question takes in this document.
 
 ---
 
-## 10. Length
+## 11. Length
 
 A five-use-case scenario runs about 700–1 100 words of body text. Past that you
 are duplicating, and the usual culprit is a bubble narrating what the next step

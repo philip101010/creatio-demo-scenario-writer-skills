@@ -56,6 +56,11 @@ around.
 and asks for it to be reformatted or checked. This is the flow below, and it is
 the mode this skill currently implements.
 
+**Rewrite mode has one thing it cannot decide.** The scenario ends with a
+*Basis vs. nice-to-have* table, and what counts as basis is a commercial
+position, not a technical read. You draft it and the consultant rules on it —
+Tier C of the gate.
+
 **Co-writing mode** — the consultant drops in client context (files, a call
 transcript, a deck) and starts inventing use cases out loud, one at a time,
 phase by phase, while you build the scenario alongside them and keep it current
@@ -162,7 +167,7 @@ objects file names the steps that put it on screen, and every field a step shows
 has a row in the objects file. A column with no step is a column nobody asked
 for; a step with no row is a build item nobody will build.
 
-### Step 6 — Hand over
+### Step 6 — Hand over, and interview on scope
 
 In the conversation, not in the documents:
 
@@ -171,8 +176,14 @@ In the conversation, not in the documents:
 - the coverage residue — how many source sentences mapped, and every dropped one
   quoted with its reason;
 - the `check` result;
-- Tier B: one message of content questions, each with its default already in the
-  draft.
+- **Tier B** — one message of content questions, each with its default already in
+  the draft;
+- **Tier C** — the *Basis vs. nice-to-have* table read back row by row, for the
+  consultant to flip. Draft each row with the removal test: take the capability
+  out and if a step stops working it is basis, if only a bubble's claim shrinks
+  it is nice-to-have, and if it turns on a customer-side decision it is
+  `Open — <who> to decide`. Never attach a euro figure or an effort estimate to
+  a row; the commercial team owns that, and the section says so.
 
 Then one question, and nothing else: what to change.
 
@@ -202,9 +213,15 @@ Then one question, and nothing else: what to change.
 10. **Every question ships with the default already applied**, in the document
     and in the message that asks it.
 11. **No GUIDs, no record Ids, no credentials** in either file.
-12. **Banned words** — `format.md` section 8. Check your own draft against the
+12. **Banned words** — `format.md` section 9. Check your own draft against the
     list before delivering.
-13. **Nothing outside the sections** either contract defines.
+13. **Basis vs. nice-to-have is the consultant's call, not yours.** Draft it
+    with the removal test, ask row by row, take their answer verbatim even
+    where it contradicts your reasoning, and leave no cell blank — an item
+    they will not classify is `Open — <who> to decide`.
+14. **Never quantify scope.** No money, no man-days, no effort estimates,
+    anywhere in either file.
+15. **Nothing outside the sections** either contract defines.
 
 ## What good looks like
 
