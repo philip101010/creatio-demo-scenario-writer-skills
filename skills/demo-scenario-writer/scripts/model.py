@@ -42,7 +42,8 @@ Exit codes
 ----------
   0  verified: it exists in this snapshot
   1  NOT verified: it is absent, or present but empty in this snapshot.
-     Either way you may not write a build-spec line about it. Raise an ?OPEN.
+     Either way you may not write it down as existing. Mark it as new in the
+     objects file, or ask.
      For `check`, 1 means at least one item of the list was not verified.
   2  usage error (bad or missing argument)
 """
@@ -266,7 +267,7 @@ def cmd_lookup(m, name):
     if meta is None:
         print("NOT VERIFIED: lookup object %r is not in this snapshot." % name)
         print("Try: sh scripts/model.sh search %s" % name)
-        print("Do not invent values. Raise an ?OPEN.")
+        print("Do not invent values.")
         return 1
 
     note = lookup_note(m, obj_name)
@@ -285,7 +286,7 @@ def cmd_lookup(m, name):
         print("Reason: %s." % note)
     else:
         print("It may be empty on that instance, or filled per project.")
-    print("Do not invent values. Raise an ?OPEN.")
+    print("Do not invent values.")
     return 1
 
 
