@@ -413,8 +413,9 @@ def cmd_check(m, items):
     print("%d checked, %d verified, %d NOT verified."
           % (len(parsed), len(parsed) - missing, missing))
     if missing:
-        print("A missing lookup value or a missing simple column is normally a "
-              "build-spec line, not an ?OPEN - see best-practices.md section 2.")
+        print("A missing lookup value or a missing simple column is normally "
+              "something to mark as new in the objects file, not a question - "
+              "see best-practices.md section 2.")
     return 1 if missing else 0
 
 
