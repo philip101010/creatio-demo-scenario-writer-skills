@@ -178,29 +178,52 @@ narrates a demo, and the way the presenter will actually speak it:
    bubble sentence or it is nothing. Almost every draft fails here first,
    because the source is written in exactly that voice — moving those
    sentences into the bubbles **is** the rewrite.
-2. **Location first, when the page changes.** Name where you are before you act
-   — list page, form page plus tab, mini page, Home page, chat panel. Omit it
-   while you stay on the same page.
-3. **Every step ends on something the audience can see.** A step that produces
+2. **Say where you are looking, every time.** Not "where the page changes" —
+   every step. A step names the place on screen and then what is in it: the
+   **Timeline**, the **Feed**, the **Subtasks** list, the stage bar, the
+   **Agent Inbox** queue, the CTI panel. A presenter reading the step must know
+   which part of the screen to point at.
+
+3. **Plain words, short sentences, active voice.** "I open X. I see Y." Nothing
+   that has to be parsed twice.
+
+   > **Too clever:** *"An acknowledgement e-mail quoting CC-20251 goes to the
+   > customer in the contact's language."*
+   >
+   > **Step:** *"I open the **Timeline** on the case. The acknowledgement e-mail
+   > is already there. It quotes the case number **CC-20251** and is written in
+   > the language from the contact record *(sent by the process, from the
+   > out-of-the-box template)*."*
+
+   The first sentence is shorter and says less. It is passive, it never says
+   where to look, and a presenter cannot perform it — they would have to work
+   out for themselves that the proof is on the Timeline.
+
+4. **Automation is shown, not asserted.** The system does plenty the presenter
+   never watches happen — a case is created, an owner is set, a rating comes
+   back. The step is not the event; the step is **the presenter opening the
+   place where the result is visible**. If there is nowhere to open, it is not a
+   step: it is a line in the objects file.
+5. **Every step ends on something the audience can see.** A step that produces
    nothing to look at is not a step; fold it into the one before it.
-4. **Name the mechanics inline** — the column caption, the lookup value in
+6. **Name the mechanics inline** — the column caption, the lookup value in
    quotes, the component — in **bold**. Bold is for element and value names
    only, never for emphasis.
-5. **Provenance in italics** for every value the presenter did not type:
+7. **Provenance in italics** for every value the presenter did not type:
    *(created by the process)*, *(from the OEM feed)*, *(calculated by the rule)*,
    *(seeded)*. See section 5 — this rule does more work than any other.
-6. **A step says what happens; it never sells and never explains.** "I do not
+8. **A step says what happens; it never sells and never explains.** "I do not
    have to remember what comes next" is a bubble. "The **Next steps** panel
    carries the task **Review case information**" is a step. The difference is
    not tone, it is who the sentence is addressed to: a step addresses the person
    driving the screen, a bubble addresses the room.
-7. **One step, one coherent move.** A step may hold several actions when they are
+9. **One step, one coherent move.** A step may hold several actions when they are
    one gesture — open the tab, pick the record, the form opens — but not two
    unrelated ideas.
-8. **One path.** *If*, *or*, *optionally*, *alternatively*, *in case of* are
+10. **One path.** *If*, *or*, *optionally*, *alternatively*, *in case of* are
    banned. An alternative flow is dropped or becomes its own step, never a
    branch inside one.
-9. **Numbering never shifts.** Steps are numbered per use case and keep their
+11. **Numbering never shifts.** Steps are numbered per use case and keep their
    numbers across every revision, so "UC2 step 7" means the same thing in the
    meeting, in the objects file and in the build. A removed step leaves a gap
    rather than renumbering the rest.
@@ -348,7 +371,7 @@ scenario; past twenty you are listing configuration rather than capabilities.
 coding agent. A consultant reading past a column-type table is a consultant not
 reading the next use case.
 
-**No acceptance table.** Rule 3 of the step already forces every step to end on
+**No acceptance table.** Rule 5 of the step already forces every step to end on
 something visible, which *is* the expected result. A separate acceptance table
 would restate every step in a second column — the duplication that turns a
 600-word scenario into 7 000. The engineer verifies by walking the steps.

@@ -203,9 +203,11 @@ Then one question, and nothing else: what to change.
 5. **One path.** *If*, *or*, *optionally*, *alternatively*, *in case of* are
    banned from steps. An alternative flow is dropped or becomes its own step.
 6. **A step holds three things only** — the action, what appears on screen, and
-   what the system did to produce it — in one or two sentences of prose. Every
-   explaining sentence belongs to a bubble. Arrows belong to the flow line and
-   nowhere else.
+   what the system did to produce it — in short, plain, active sentences. Every
+   step says **where on screen** it is visible, and automation the presenter
+   cannot watch happen is written as them opening the place where its result
+   shows. Every explaining sentence belongs to a bubble; arrows belong to the
+   flow line and nowhere else.
 7. **A fact appears once**, in one of the two files.
 8. **No unverified assertion.** Object, field, lookup, value, mechanism —
    checked against the snapshot, or decided by the rules, or asked.
