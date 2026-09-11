@@ -146,6 +146,11 @@ above the steps it covers, as a Markdown blockquote.
   deleting the thing they wrote the scenario for.
 - **Problem → what you are about to see → what it means.** Three sentences is the
   ceiling.
+- **This is where every explaining sentence goes.** Whatever you strip out of a
+  step — why it matters, what it replaces, what the agent no longer does — lands
+  here or is dropped. The bubbles are not decoration around the steps; they are
+  the other half of the same content, and the split between them is what makes
+  both halves readable.
 - Never a claim the steps do not demonstrate. No *seamlessly*, no "the system
   automatically" without naming the mechanism, no emoji.
 
@@ -158,9 +163,21 @@ narrates a demo, and the way the presenter will actually speak it:
 >     **Reimbursement** and the dealer's **Recovered this month** tile reads
 >     **42 750 SAR** *(rolled up by the process)*.
 
-1. **One to three sentences.** The first says what you do; the rest say what
-   appears because of it. Past three sentences you are narrating, which is the
-   bubble's job.
+1. **Three things only: the action, what appears, what the system did.** One or
+   two sentences. Nothing else is allowed in a step — not why it matters, not
+   how it compares to today, not what the presenter avoided having to do.
+
+   > **Water:** *"The customer card is loaded for me — I never search for it,
+   > and there is nothing to open in parallel."*
+   >
+   > **Step:** *"I open the case. The **SAP data** block shows account tier,
+   > credit limit and credit status *(returned by the SAP mock)*."*
+
+   The test is deletion: if a sentence can go without changing what is on
+   screen or what has to be built, it does not belong in a step. It is either a
+   bubble sentence or it is nothing. Almost every draft fails here first,
+   because the source is written in exactly that voice — moving those
+   sentences into the bubbles **is** the rewrite.
 2. **Location first, when the page changes.** Name where you are before you act
    — list page, form page plus tab, mini page, Home page, chat panel. Omit it
    while you stay on the same page.
@@ -172,10 +189,11 @@ narrates a demo, and the way the presenter will actually speak it:
 5. **Provenance in italics** for every value the presenter did not type:
    *(created by the process)*, *(from the OEM feed)*, *(calculated by the rule)*,
    *(seeded)*. See section 5 — this rule does more work than any other.
-6. **A step says what happens; it never sells.** "I do not have to remember what
-   comes next" is a bubble. "The **Next steps** panel carries the task **Review
-   case information**" is a step. The difference is not tone, it is who the
-   sentence is addressed to.
+6. **A step says what happens; it never sells and never explains.** "I do not
+   have to remember what comes next" is a bubble. "The **Next steps** panel
+   carries the task **Review case information**" is a step. The difference is
+   not tone, it is who the sentence is addressed to: a step addresses the person
+   driving the screen, a bubble addresses the room.
 7. **One step, one coherent move.** A step may hold several actions when they are
    one gesture — open the tab, pick the record, the form opens — but not two
    unrelated ideas.

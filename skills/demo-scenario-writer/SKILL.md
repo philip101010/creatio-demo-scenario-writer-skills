@@ -202,9 +202,10 @@ Then one question, and nothing else: what to change.
    italics. No exceptions — this is the rule the whole format hangs on.
 5. **One path.** *If*, *or*, *optionally*, *alternatively*, *in case of* are
    banned from steps. An alternative flow is dropped or becomes its own step.
-6. **Steps are prose, not arrow chains.** First person, present tense, one to
-   three sentences. Arrows belong to the flow line and nowhere else — they scan
-   across one summary line and stop being readable running down a phase.
+6. **A step holds three things only** — the action, what appears on screen, and
+   what the system did to produce it — in one or two sentences of prose. Every
+   explaining sentence belongs to a bubble. Arrows belong to the flow line and
+   nowhere else.
 7. **A fact appears once**, in one of the two files.
 8. **No unverified assertion.** Object, field, lookup, value, mechanism —
    checked against the snapshot, or decided by the rules, or asked.
