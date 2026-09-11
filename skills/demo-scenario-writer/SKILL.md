@@ -90,19 +90,20 @@ drew, and the sentences that are narration rather than action. Keep both.
 
 ### Step 2 — Run the ten logic checks
 
-Walk `question-gate.md` Tier A over the mapped source: orphan preconditions,
-dead results, actor jumps, impossible order, silent mechanisms, phase boundaries
-that do not hold, two-reading steps, contradictions, unexplained terms,
-unreachable pages.
+Walk `question-gate.md` Tier A over the mapped source. Ten things fire; only six
+of them earn a question, and the line is sharp: **you ask only about the logic,
+the consistency and the order of the steps.** Orphan preconditions, dead
+results, actor jumps, impossible order, contradictions, unreachable pages.
 
-Anything a check fires on is either resolvable from `best-practices.md`
-section 2 — and then you resolve it and record what you did — or it is a Tier A
-question.
+The other four — silent mechanisms, phase boundaries, two readings, unexplained
+terms — you resolve, write into the step, and record in *What I changed*.
 
-**Check 5, silent mechanism, is where the value of this skill sits.** A result
-with no cause is the defect that survives every review and then fails in the
-room. Every on-screen value must be either typed by the presenter or carry a
-provenance marker; where you cannot name what produced it, ask.
+**Silent mechanism is the one to watch.** A result with no stated cause is the
+defect that survives every review and then fails in the room, and it fires more
+often than everything else combined. Name the mechanism from
+`best-practices.md` section 1, write the provenance marker, carry it into the
+objects file — do not ask. The consultant left it out because they do not know
+what produced it either.
 
 ### Step 3 — Ask Tier A, once
 

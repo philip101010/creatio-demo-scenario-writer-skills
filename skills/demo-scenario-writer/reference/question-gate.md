@@ -22,11 +22,18 @@ their attention runs out long before your question list does.
 
 ---
 
-## Tier A — the ten logic checks
+## Tier A — six checks that ask, four that you resolve
 
-Walk these over the consultant's text before writing. Each one that fires is
-either something you can resolve from `best-practices.md` section 2, or a Tier A
-question. Nothing else earns a Tier A question.
+Ten things go wrong in a free-form scenario. Only six of them are worth a
+consultant's attention, and the line between the two groups is sharp: **a Tier A
+question is about whether the steps hold together — their logic, their
+consistency, their order — and nothing else.**
+
+Everything else you resolve, write into the step, and record in *What I changed*
+so the consultant sees the decision without having to answer for it. A gate that
+asks twelve questions gets five answers; a gate that asks five gets five.
+
+### The six that ask
 
 **1 · Orphan precondition.** A step acts on a record, role, page or value that no
 earlier step created and no seed data provides.
@@ -34,9 +41,12 @@ earlier step created and no seed data provides.
 > *"The manager approves the discount"* — no step created a discount request,
 > and no earlier step put the manager anywhere near this record.
 
+Resolve it instead when seed data obviously fixes it and the choice of record
+does not change the story. Ask when the precondition has to be *produced* on
+screen and no step produces it.
+
 **2 · Dead result.** A step produces something no later step, bubble or use case
-ever uses. Either a step is missing after it, or the result is decoration and
-the step should end somewhere else.
+ever uses. Either a step is missing after it, or the result is decoration.
 
 > *"…and an approval task is created for the regional director."* Nobody opens
 > it. Does the demo show the director acting, or does the task exist only to
@@ -44,36 +54,42 @@ the step should end somewhere else.
 
 **3 · Actor jump.** The acting role changes and the text does not say who is now
 at the keyboard. Consultants write "then it's approved" constantly; a demo has
-somebody's screen on the projector at every moment.
+somebody's screen on the projector at every moment, and switching users costs
+minutes of a slot that is already short.
 
 **4 · Impossible order.** A step reads a value that a later step writes, or shows
 a state the flow has not reached yet.
 
-**5 · Silent mechanism.** A result appears and nothing says what produced it — a
-field fills itself, a record shows up, a number changes, a stage moves. This is
-the provenance rule from `format.md` section 5 used as a detector: if the
-presenter did not type it and you cannot name what did, that is a question, and
-it is the single most productive check on this list. Most demos that collapse in
-the room collapse here.
+**5 · Contradiction.** Two places assert different things about the same record,
+field, state or clock. Usually a scenario that grew over several client calls,
+and usually invisible until someone does the arithmetic.
 
-**6 · Phase boundary that does not hold.** A long block with no change of actor,
-system or time cannot be split into phases. If the consultant's text has no such
-turn, either the block is one phase or you have misread where it turns.
+**6 · Unreachable page.** The step happens somewhere the previous step could not
+have navigated to — easy to miss when the use cases were written weeks apart.
 
-**7 · Two readings.** A step that can be read two ways, where the readings build
-differently. *"Routed by region"* — whose region, the account's or the
-contact's?
+### The four you resolve
 
-**8 · Contradiction.** Two places assert different things about the same record,
-field or state. Usually a scenario that grew over several client calls.
+These fire often and answer themselves. Decide, write the decision into the
+step, and put one line in *What I changed*.
 
-**9 · Unexplained term.** A term is introduced and never resolved. A reader who
-trips on an unexplained word stops thinking, so the term is either explained on
-the spot or cut — and if only the client knows what it means, it is a question.
+**7 · Silent mechanism.** A result appears and nothing says what produced it. Name
+the most likely mechanism from `best-practices.md` section 1, write the
+provenance marker, and carry it into the objects file as the thing to build.
+This fires more than any other check, and turning each hit into a question is
+exactly how a gate becomes unanswerable — the consultant does not know what
+produced it either, which is why they left it out.
 
-**10 · Unreachable page.** The step happens somewhere the previous step could not
-have navigated to. Cheap to miss when the consultant wrote the use cases weeks
-apart.
+**8 · Phase boundary.** Where the phases fall is yours. Cut at a change of actor,
+system or time; if the text offers no such turn, it is one phase.
+
+**9 · Two readings.** A sentence that can be read two ways: pick the reading that
+keeps the rest of the flow consistent and say which you picked. It becomes a
+question only when the two readings build *differently enough to matter* — and
+then it is really check 5.
+
+**10 · Unexplained term.** Explain it on first use in a bubble, or cut it. Only a
+term whose meaning is the client's own — where a wrong guess misdescribes their
+business — is worth asking about.
 
 ---
 
@@ -82,6 +98,11 @@ apart.
 **One message, numbered, all of it.** Never one question at a time; never a
 second Tier A round unless an answer opened something genuinely new, and then at
 most one.
+
+**Expect five, not fifteen.** A rewrite of a real scenario fires the ten checks
+twenty times and ends with a handful of questions, because the other fifteen
+were resolved. If your list runs past about eight, re-read it: the extras are
+almost always check 7 hits that should have been decided.
 
 Each question is three lines and nothing more:
 
