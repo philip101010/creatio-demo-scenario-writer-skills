@@ -196,14 +196,15 @@ Then one question, and nothing else: what to change.
    phases.
 2. **Step numbers never shift**, across phases or revisions. A removed step
    leaves a gap.
-3. **Every chain ends on something visible on screen.** A step with nothing to
-   look at belongs inside the previous chain.
+3. **Every step ends on something visible on screen.** A step with nothing to
+   look at belongs inside the one before it.
 4. **Every value the presenter did not type carries its provenance**, in
    italics. No exceptions — this is the rule the whole format hangs on.
 5. **One path.** *If*, *or*, *optionally*, *alternatively*, *in case of* are
    banned from steps. An alternative flow is dropped or becomes its own step.
-6. **The words "click" and "say" never appear.** The arrow carries the action,
-   the bubble carries the voice.
+6. **Steps are prose, not arrow chains.** First person, present tense, one to
+   three sentences. Arrows belong to the flow line and nowhere else — they scan
+   across one summary line and stop being readable running down a phase.
 7. **A fact appears once**, in one of the two files.
 8. **No unverified assertion.** Object, field, lookup, value, mechanism —
    checked against the snapshot, or decided by the rules, or asked.

@@ -200,7 +200,7 @@ Go through the source in order and tag every sentence with where it lands:
 
 | Tag | Lands in |
 |---|---|
-| `step` | a numbered chain, with its use case and step number |
+| `step` | a numbered step, with its use case and step number |
 | `bubble` | narration, with its use case and phase |
 | `object` | the objects file — an object, a column, a lookup value, a seed record |
 | `flow` | the flow line of a use case |

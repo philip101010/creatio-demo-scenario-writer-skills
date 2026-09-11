@@ -82,14 +82,14 @@ objects file, alongside the seed data it restores.
 
 > <bubble>
 
-1.  <chain>
-2.  <chain>
+1.  <step>
+2.  <step>
 
 ### Phase 2 — <name>
 
 > <bubble>
 
-3.  <chain>
+3.  <step>
 ```
 
 **The use case count and order are the consultant's.** In rewrite mode you never
@@ -100,7 +100,12 @@ making it legible, not redesigning it.
 ### The flow line
 
 One italic line under the title, plain language, arrows, **no element names and
-no field names** — the skeleton the steps then demonstrate:
+no field names** — the skeleton the steps then demonstrate.
+
+**This line is the only place in the document where arrows carry the story.** A
+chain of arrows is fast to scan across one summary line and unreadable the
+moment it runs down a phase, which is exactly why the summary gets them and the
+steps do not:
 
 > *Service visit closed → warranty checked automatically → claim created → OEM
 > reviews → reimbursement paid*
@@ -144,35 +149,64 @@ above the steps it covers, as a Markdown blockquote.
 - Never a claim the steps do not demonstrate. No *seamlessly*, no "the system
   automatically" without naming the mechanism, no emoji.
 
-### The step — a chain ending on something visible
+### The step — what you do, and what appears
 
-> `7.  Claim WC-0042 → Decision **Accepted** → stage moves to **Reimbursement**
->     → dashboard tile **Recovered this month** reads **42 750 SAR**
->     *(rolled up by the process)*`
+Written in prose, first person, present tense — the way a consultant already
+narrates a demo, and the way the presenter will actually speak it:
 
-1. **The words "click" and "say" never appear.** The arrow carries the action;
-   the bubble carries the voice.
-2. **Location first, when the page changes.** The first link names where you are
+> 7.  I set **Decision** to **Accepted** on claim **WC-0042**. The stage moves to
+>     **Reimbursement** and the dealer's **Recovered this month** tile reads
+>     **42 750 SAR** *(rolled up by the process)*.
+
+1. **One to three sentences.** The first says what you do; the rest say what
+   appears because of it. Past three sentences you are narrating, which is the
+   bubble's job.
+2. **Location first, when the page changes.** Name where you are before you act
    — list page, form page plus tab, mini page, Home page, chat panel. Omit it
-   only while you stay on the same page.
-3. **Every chain ends on something the audience can see.** A step that produces
-   nothing to look at is not a step; it belongs inside the previous chain.
+   while you stay on the same page.
+3. **Every step ends on something the audience can see.** A step that produces
+   nothing to look at is not a step; fold it into the one before it.
 4. **Name the mechanics inline** — the column caption, the lookup value in
    quotes, the component — in **bold**. Bold is for element and value names
    only, never for emphasis.
 5. **Provenance in italics** for every value the presenter did not type:
    *(created by the process)*, *(from the OEM feed)*, *(calculated by the rule)*,
    *(seeded)*. See section 5 — this rule does more work than any other.
-6. **One step, one coherent move.** A chain may hold several actions when they
-   are one gesture ("open the tab → pick the record → the form opens"); it must
-   not hold two unrelated ideas.
-7. **One path.** *If*, *or*, *optionally*, *alternatively*, *in case of* are
+6. **A step says what happens; it never sells.** "I do not have to remember what
+   comes next" is a bubble. "The **Next steps** panel carries the task **Review
+   case information**" is a step. The difference is not tone, it is who the
+   sentence is addressed to.
+7. **One step, one coherent move.** A step may hold several actions when they are
+   one gesture — open the tab, pick the record, the form opens — but not two
+   unrelated ideas.
+8. **One path.** *If*, *or*, *optionally*, *alternatively*, *in case of* are
    banned. An alternative flow is dropped or becomes its own step, never a
    branch inside one.
-8. **Numbering never shifts.** Steps are numbered per use case and keep their
+9. **Numbering never shifts.** Steps are numbered per use case and keep their
    numbers across every revision, so "UC2 step 7" means the same thing in the
    meeting, in the objects file and in the build. A removed step leaves a gap
    rather than renumbering the rest.
+
+### An exchange with Creatio.ai
+
+Where the step is a conversation with the AI, write the conversation. Indent it
+under the step as a quoted block, with the prompt exactly as the presenter will
+type it and the answer trimmed to what will be on screen:
+
+> 12. I ask Creatio.ai for a briefing rather than reading the whole thread.
+>
+>     > **Me:** Summarise this case for me.
+>     >
+>     > **Creatio.ai:** CC-20251 — Quote request, registered today 08:42 by
+>     > Alexander Wilson (Alpha Business, Gold tier). The customer asks for
+>     > 5 000 pcs of product XYZ and a price offer. First response due 12:02.
+>     > The account has five previous cases, two of them quote requests that
+>     > both became orders.
+>
+>     *(read from the case, the account and the SAP mock by the AI skill)*
+
+The answer is content, not decoration: an engineer builds the AI skill's output
+shape from it, so it is written the way it must come back, not paraphrased.
 
 ---
 
@@ -265,7 +299,7 @@ each item still needs to be quantified by the commercial team.
 | **Open — `<who>` to decide** | it needs a decision on the customer's side, and the name of who decides is part of the value |
 
 That first test is mechanical, and it is why this table can be drafted rather
-than invented: walk the steps, remove the capability, and see whether a chain
+than invented: walk the steps, remove the capability, and see whether a step
 still ends on something visible. An item that only weakens the narration is not
 basis, however much the consultant likes it.
 
@@ -296,7 +330,7 @@ scenario; past twenty you are listing configuration rather than capabilities.
 coding agent. A consultant reading past a column-type table is a consultant not
 reading the next use case.
 
-**No acceptance table.** Rule 3 of the step already forces every chain to end on
+**No acceptance table.** Rule 3 of the step already forces every step to end on
 something visible, which *is* the expected result. A separate acceptance table
 would restate every step in a second column — the duplication that turns a
 600-word scenario into 7 000. The engineer verifies by walking the steps.
@@ -311,7 +345,7 @@ without another use case having been run first.
 
 Reject your own draft if it contains any of these, and rewrite:
 
-`click` · `say` · `should be able to` · `etc.` · `if possible` · `as needed` ·
+`should be able to` · `etc.` · `if possible` · `as needed` ·
 `various` · `some` · `several` · `a few` · `and/or` · `optionally` · `TBD` ·
 `N/A` · `we could` · `it would be nice` · `similar to` · `and so on` ·
 `seamlessly` · `powerful` · `robust`

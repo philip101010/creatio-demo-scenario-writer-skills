@@ -25,22 +25,25 @@ one screen → a case is registered without leaving it*
 > the agent knowing who is calling before they say hello — and everything they
 > need to decide how to treat this person sitting on one screen.
 
-1.  Sign-in as CS agent → **Service desktop** opens *(default page for the role)*
-2.  CTI panel → inbound call → caller shown as **Tiffany Jane Martin** *(resolved
-    from **Mobile phone** by the CTI emulator)*
-3.  Caller's name → Contact page, **KYC** tab → **Incoming calls** = **3**
-    *(calculated by the rule)*, **NPS** = **8** *(seeded)*, **Champion** = **yes**
-    *(seeded)*
+1.  I sign in as a CS agent. The **Service desktop** opens on its own *(the
+    default page for the role)*.
+2.  I trigger an inbound call from the CTI emulator. The CTI panel shows the
+    caller as **Tiffany Jane Martin** *(resolved from her **Mobile phone** by
+    the emulator)* — I never search for her.
+3.  I open the caller's name and land on the Contact page, **KYC** tab.
+    **Incoming calls** reads **3** *(calculated by the rule)*, **NPS** is **8**
+    and **Champion** is **yes** *(both seeded)*.
 
 > Three calls this month, and she is the person who championed you internally
 > when they bought. That is why the next thirty seconds are not a lottery — the
 > agent knows to treat this one carefully before deciding anything.
 
-4.  **Register a case** → mini page, four fields
-5.  **Subject**, **Category** = **"Information request"**, **Service**,
-    **Priority** = **"Critical"** → Save → case appears on the Contact timeline
-    with **Account** = **Deloitte Germany** and **Origin** = **"Call"** *(both
-    set by the mini page)*
+4.  I run **Register a case** from the tab. A mini page opens with four fields
+    and nothing else.
+5.  I fill **Subject**, set **Category** to **"Information request"**, pick the
+    **Service** and set **Priority** to **"Critical"**, and save. The case
+    appears on the Contact timeline with **Account** = **Deloitte Germany** and
+    **Origin** = **"Call"** *(both set by the mini page)*.
 
 ---
 
@@ -131,6 +134,12 @@ were not.
 consultant's sentences already ran in demo order; the rewrite numbered them and
 gave each one a visible ending. Nothing was resequenced, because nothing needed
 to be.
+
+**The steps stayed prose, in their first person.** Compressing step 3 to
+`Caller's name → KYC tab → Incoming calls = 3` saves two lines and costs the
+presenter the sentence they were going to say out loud. Arrows earn their place
+on the flow line, where the whole use case fits on one row; inside a phase they
+turn a demo into a diagram.
 
 **Their voice went into the bubbles almost intact.** "No more what's your
 account number, they've already typed it in the IVR twice" and "the you already
