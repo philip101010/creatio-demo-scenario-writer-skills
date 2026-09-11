@@ -96,7 +96,7 @@ the consistency and the order of the steps.** Orphan preconditions, dead
 results, actor jumps, impossible order, contradictions, unreachable pages.
 
 The other four — silent mechanisms, phase boundaries, two readings, unexplained
-terms — you resolve, write into the step, and record in *What I changed*.
+terms — you resolve, write into the step, and report at hand-over.
 
 **Silent mechanism is the one to watch.** A result with no stated cause is the
 defect that survives every review and then fails in the room, and it fires more
@@ -105,14 +105,19 @@ often than everything else combined. Name the mechanism from
 objects file — do not ask. The consultant left it out because they do not know
 what produced it either.
 
-### Step 3 — Ask Tier A, once
+### Step 3 — Ask Tier A, once, with options
 
-One message, numbered, every question three lines: what it blocks, the question
-with their own words quoted back, and the default you will apply if they do not
-answer. Say that unanswered items ship as open questions with the default
-already written into the step.
+One message, numbered, before a line of the document exists. Every question
+names what it blocks, quotes their own words back, and offers **two to four
+concrete options** — one of them marked as recommended, each with half a line on
+what it costs elsewhere in the scenario. Include the option that keeps their
+text as written whenever it is viable.
 
-Wait once. Then proceed regardless — do not stall and do not chase.
+If you cannot name two concrete resolutions, it is not a question yet: you have
+not understood the ambiguity well enough to ask about it.
+
+Say that anything unanswered goes with the recommendation. Wait once. Then
+proceed — do not stall and do not chase.
 
 ### Step 4 — Verify every name
 
@@ -159,6 +164,9 @@ not on that list is a question for the engineer, not an assumption.
 
 ### Step 5 — Write both files
 
+The document holds no questions and no record of what you changed. It is the
+resolved demo, written to the answers from Step 3.
+
 In one pass, in the exact structure of `format.md` and `objects-file.md`. The
 scenario file carries the narrative; the objects file carries the model and the
 seed data. A fact appears in exactly one of them.
@@ -177,6 +185,10 @@ In the conversation, not in the documents:
 - the coverage residue — how many source sentences mapped, and every dropped one
   quoted with its reason;
 - the `check` result;
+- **what you decided** — the mechanisms you named where the source stated none,
+  and the wording you resolved, one line each. This is the deviation record, and
+  it belongs here rather than in the document, where the consultant can push
+  back on it while it is still cheap;
 - **Tier B** — one message of content questions, each with its default already in
   the draft;
 - **Tier C** — the *Basis vs. nice-to-have* table read back row by row, for the
@@ -215,10 +227,11 @@ Then one question, and nothing else: what to change.
 9. **Decide far more than you ask.** Check every candidate question against
    `best-practices.md` section 2 first. Missing lookup values, missing simple
    fields, licensing and standard admin operations are decided, not asked.
-10. **Every question ships with the default already applied**, in the document
-    and in the message that asks it.
+10. **Every question is asked in the chat before the document exists**, with two
+    to four concrete options and one of them recommended. No question and no
+    deviation record ever appears in the document itself.
 11. **No GUIDs, no record Ids, no credentials** in either file.
-12. **Banned words** — `format.md` section 9. Check your own draft against the
+12. **Banned words** — `format.md` section 8. Check your own draft against the
     list before delivering.
 13. **Basis vs. nice-to-have is the consultant's call, not yours.** Draft it
     with the removal test, ask row by row, take their answer verbatim even

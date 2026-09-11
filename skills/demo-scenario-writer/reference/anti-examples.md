@@ -30,7 +30,7 @@ and say why.
 
 > **Bad** — "Q · engineer. "Access rights are also reassigned, the departing AM's rights are revoked". Record-level rights transfer is not a standard action. Which mechanism: a process that rewrites the rights records, a change of business unit, or user deactivation only?"
 
-> **Good** — the objects file, Logic to build: "**Process** `Transfer ownership`: reassigns the departing AM's accounts and their open leads, opportunities, orders and invoices to the Successor; grants the Successor read and edit rights on those records; removes the departing AM's rights on them; sets the departing AM to inactive. Serves UC5 s3." And in *Open questions*: "**Q4** · blocks UC5 s3 · Does the departing AM keep read access to their old accounts for handover, or lose it immediately? · **Applied: access is revoked immediately.**"
+> **Good** — the objects file, Logic to build: "**Process** `Transfer ownership`: reassigns the departing AM's accounts and their open leads, opportunities, orders and invoices to the Successor; grants the Successor read and edit rights on those records; removes the departing AM's rights on them; sets the departing AM to inactive. Serves UC5 s3." The one real question — does the departing AM keep read access to their old accounts for handover, or lose it immediately? — was asked in the chat with both options before the document was written.
 
 Ownership transfer is a standard operation. Never ask *how*. What may genuinely
 be unclear is the **end state** — which role gains what, which loses what, on
@@ -105,7 +105,7 @@ which snapshot you verified against, and never carry a finding across.
 
 > **Bad** — "…from preparing the day, through visiting an existing customer and (optionally) engaging a prospect, to the automatic handoffs…"
 
-> **Good** — the prospect half becomes its own numbered step in the same use case, or it is dropped and listed in *What I changed*.
+> **Good** — the prospect half becomes its own numbered step in the same use case, or it is dropped and the drop is reported at hand-over.
 
 The word *optionally* means the use case cannot be tested: a tester who skips the
 optional half and a tester who does it are running different tests. Note what
@@ -159,12 +159,13 @@ step is what turns 700 words into 7 000.
 
 > **Bad** — "Create order — BP that creates order (One or several orders?)" left highlighted in the middle of page 12.
 
-> **Good** — the step is written to the decision, and *Open questions* carries `Q7` with what it blocks, the question, and the default already applied.
+> **Good** — the question was asked in the chat before the document existed, with "one order" and "several orders" as options and one of them recommended. The step is written to the answer, and the document carries no doubt at all.
 
 A highlight, a bold aside or a bracketed doubt in the prose is not a question.
-Nobody owns it and nobody answers it. Only an entry in *Open questions* is a
-question, because only there does it carry a number, a blast radius and the
-default that ships if nobody answers.
+Nobody owns it and nobody answers it — and a question printed in a deliverable is
+no better, which is why the document holds none. A question is a numbered item
+in the chat, with what it blocks, concrete options and a recommendation, asked
+while changing the answer is still free.
 
 ### 16. Currency and localisation discovered mid-document
 

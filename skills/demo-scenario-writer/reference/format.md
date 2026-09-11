@@ -30,14 +30,14 @@ v<n> · <date> · <N> use cases
 ## UC2 — <name>
 ...
 
-## What I changed
-## Open questions
 ## Basis vs. nice-to-have
 ```
 
 No purpose section, no goals, no brief summary, no attachments, no closing
-notes, no object tables, no acceptance table. The reasons for the last two are
-in section 8.
+notes, no object tables, no acceptance table, **no questions and no record of
+what you changed**. The document is the resolved demo. Everything you decided
+and everything you asked is reported in the conversation instead — see section 7,
+and `question-gate.md`.
 
 ---
 
@@ -280,34 +280,7 @@ question gate does — see `question-gate.md`, check 5.
 
 ---
 
-## 6. What I changed, and Open questions
-
-**What I changed** — the deviation record, in the document rather than hidden,
-because the consultant handed you their text and must be able to find where it
-was altered. One line each, newest concern first:
-
-> - UC2 steps 4–6 were one paragraph; split into three steps because the
->   approval happens on the manager's screen, not the rep's.
-> - "Information request" added to **Case category** — the snapshot holds only
->   Incident and Service request, and UC4 routes on this value.
-> - Dropped the SMS reminder: it needs development, and nothing in the demo
->   depends on it.
-
-**Open questions** — only what survived the gate: what the consultant declined
-to answer, or deferred. Each one states three things, and the third is not
-optional:
-
-> - **Q1** · blocks UC2 step 4 · Is the case routed by the account's region or
->   the contact's region? · **Applied: the account's region**, because the
->   routing rule reads the account.
-
-The step affected still appears, written to the default. A document with open
-questions is still presentable and still buildable — that is the point of
-stating the default rather than leaving a hole.
-
----
-
-## 7. Basis vs. nice-to-have
+## 6. Basis vs. nice-to-have
 
 The last section of the document, and the only one whose content is not yours to
 decide. A demo scenario is also a scope proposal: some of what it shows is what
@@ -365,7 +338,7 @@ scenario; past twenty you are listing configuration rather than capabilities.
 
 ---
 
-## 8. What this format deliberately does not have
+## 7. What this format deliberately does not have
 
 **No object or field tables.** They are in the objects file, whose reader is a
 coding agent. A consultant reading past a column-type table is a consultant not
@@ -380,9 +353,16 @@ would restate every step in a second column — the duplication that turns a
 live in the objects file's seed data, which is what makes a use case runnable
 without another use case having been run first.
 
+**No open questions, and no list of what you changed.** Both used to sit at the
+end of the document, and both were the wrong place for them. A question printed
+in a document is a question nobody answers — it is asked in the chat before the
+document exists, with options to pick from, and the document is written to the
+answer. What you changed relative to the consultant's text is reported in the
+same conversation, where they can push back on it while it is still cheap.
+
 ---
 
-## 9. Banned words
+## 8. Banned words
 
 Reject your own draft if it contains any of these, and rewrite:
 
@@ -395,7 +375,7 @@ Reject your own draft if it contains any of these, and rewrite:
 
 ---
 
-## 10. Delivery
+## 9. Delivery
 
 Two Markdown files, UTF-8, in the working directory:
 
@@ -423,7 +403,7 @@ a question takes in this document.
 
 ---
 
-## 11. Length
+## 10. Length
 
 A five-use-case scenario runs about 700–1 100 words of body text. Past that you
 are duplicating, and the usual culprit is a bubble narrating what the next step

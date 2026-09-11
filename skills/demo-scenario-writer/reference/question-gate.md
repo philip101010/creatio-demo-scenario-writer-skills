@@ -29,9 +29,9 @@ consultant's attention, and the line between the two groups is sharp: **a Tier A
 question is about whether the steps hold together — their logic, their
 consistency, their order — and nothing else.**
 
-Everything else you resolve, write into the step, and record in *What I changed*
-so the consultant sees the decision without having to answer for it. A gate that
-asks twelve questions gets five answers; a gate that asks five gets five.
+Everything else you resolve, write into the step, and report at hand-over so the
+consultant sees the decision without having to answer for it. A gate that asks
+twelve questions gets five answers; a gate that asks five gets five.
 
 ### The six that ask
 
@@ -70,7 +70,7 @@ have navigated to — easy to miss when the use cases were written weeks apart.
 ### The four you resolve
 
 These fire often and answer themselves. Decide, write the decision into the
-step, and put one line in *What I changed*.
+step, and put one line in the hand-over report.
 
 **7 · Silent mechanism.** A result appears and nothing says what produced it. Name
 the most likely mechanism from `best-practices.md` section 1, write the
@@ -95,36 +95,49 @@ business — is worth asking about.
 
 ## How to ask Tier A
 
-**One message, numbered, all of it.** Never one question at a time; never a
-second Tier A round unless an answer opened something genuinely new, and then at
-most one.
+**One message, numbered, all of it, before a line of the document exists.**
+Never one question at a time; never a second round unless an answer opened
+something genuinely new, and then at most one.
 
-**Expect five, not fifteen.** A rewrite of a real scenario fires the ten checks
-twenty times and ends with a handful of questions, because the other fifteen
-were resolved. If your list runs past about eight, re-read it: the extras are
-almost always check 7 hits that should have been decided.
-
-Each question is three lines and nothing more:
+**Every question comes with options.** Not "what should happen here?" but two to
+four concrete answers, each one complete enough to be written straight into the
+step, with the one you recommend marked and half a line of reason. A consultant
+picks a letter in fifteen seconds; an open question sits in their inbox for
+three days.
 
 ```
-A3 · UC2 steps 4–5
-"Then it's approved and the customer gets the quote." Who approves — the sales
-manager, or the regional director who appears in UC4? The two see different
-records and the demo shows a different screen for each.
-Applied if unanswered: the sales manager, because UC2 never leaves their unit.
+A1 · Phase 4 step 17, and the SLA widget in Phase 9 — the clock does not add up
+The briefing says the case was registered 08:42 with first response due 10:02,
+and the reply goes out at 10:35. The demo narrates a breached SLA and then shows
+a compliance dashboard.
+
+  a) First-response target is three hours, so it is due 12:02.   ← recommended
+     Nothing else in the scenario moves.
+  b) The reply goes out at 09:45, inside the 10:02 target.
+     The AI briefing and the offer step both need new times.
+  c) Keep 10:02 and show the breach on purpose.
+     Then Phase 9 needs a line about what happens to a missed SLA.
 ```
 
-- **What it blocks** — the use case and step numbers, so the consultant can look
-  at the exact place in their own text.
-- **The question** — quote their words, then ask. Quoting is what makes them
-  recognise the ambiguity instead of defending the sentence.
-- **The default you will apply** — always. A consultant who does not answer has
-  still shipped a document, and a consultant who disagrees with your default
-  will say so far more readily than they will answer an open question.
+Three rules keep the options honest:
 
-Say plainly that anything unanswered becomes an open question in the document
-with the default already written into the step. Then wait once. If the answers
-do not come, proceed — do not stall, do not chase.
+1. **Include the reading that keeps their text as written**, whenever it is
+   viable. They wrote it for a reason, and seeing it offered back tells them you
+   understood it rather than corrected it.
+2. **Say what each option costs**, in half a line — which other steps move. That
+   is the part they cannot see from their side and the part that decides the
+   answer.
+3. **If you cannot propose options, it is not a Tier A question.** Not being able
+   to name two concrete resolutions means you have not understood the ambiguity
+   well enough to ask about it. Understand it, or decide it.
+
+Say plainly that anything unanswered goes with the recommended option. Then wait
+once. If the answers do not come, proceed on the recommendations — do not stall
+and do not chase.
+
+**Nothing about any of this reaches the document.** The scenario is written to
+the answers, and what you decided is reported back in the same conversation at
+hand-over. A question printed in a deliverable is a question nobody answers.
 
 ---
 
@@ -154,7 +167,7 @@ question you misfiled; move it and re-ask.
 
 ## Tier C — the prioritisation interview
 
-The scenario's last section is *Basis vs. nice-to-have* (`format.md` section 7),
+The scenario's last section is *Basis vs. nice-to-have* (`format.md` section 6),
 and it is the one part of the document you may not decide. What is basis is a
 commercial position: it says what the customer is buying. Guess it and the
 generous half gets built, presented, and then quoted as if it had always been

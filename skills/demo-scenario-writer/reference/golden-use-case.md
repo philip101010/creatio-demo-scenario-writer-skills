@@ -81,14 +81,23 @@ one screen → a case is registered without leaving it*
 |---|---|---|---|---|---|
 | Tiffany Jane Martin | Deloitte Germany | +49 151 2233445 | 8 | yes | 3 incoming |
 
-### Open question in the scenario file
+### The one question, asked in the chat before any of this was written
 
-> - **Q1** · blocks the **RMA count** field on the KYC tab, nothing else · What
->   counts as an RMA for this client — returned orders, credit notes, or
->   something tracked outside Creatio? Nothing on Order marks a return and no
->   existing column derives into one, so the metric has no source. · **Applied:
->   the field is left off the tab**, and the tab holds five metrics instead of
->   six.
+```
+A1 · the RMA count on the KYC tab — nothing to count it from
+You listed "RMA count" among the six metrics on the tab. Nothing on Order marks
+a return, and no existing column derives into one, so the metric has no source.
+
+  a) Leave it off the tab; five metrics instead of six.         ← recommended
+     Nothing else in the use case moves.
+  b) Count Orders with a credit note against them.
+     Needs a new column on Order and a rule to populate it.
+  c) Count it from something you track outside Creatio.
+     Tell me what, and it becomes an import plus a seeded number.
+```
+
+Answered (a), so the tab holds five metrics and the document says nothing about
+the question ever having existed.
 
 ### At the end of the scenario file
 
@@ -104,7 +113,7 @@ each item still needs to be quantified by the commercial team.
 | Case registration from a mini page without leaving the contact (UC1) | Basis | Removes the screen-hopping they described |
 | Incoming-call count on the contact (UC1) | Basis | One rule; feeds the treat-carefully decision |
 | NPS and Champion on the KYC tab (UC1) | Nice-to-have | Seeded values; the flow runs without them |
-| RMA count on the KYC tab (UC1) | Open — client to decide | No source until Q1 is answered |
+| RMA count on the KYC tab (UC1) | Open — client to decide | Dropped for now; no source in the object model |
 ```
 
 Four rows of the five come straight from the removal test. Take the screen-pop
@@ -162,16 +171,17 @@ five steps in `Phase 1` would have added a line and no information.
 **The missing lookup value was decided, not asked.** "Information request" is
 not in CaseCategory — the snapshot holds only Incident and Service request, and
 neither means the same thing. It became a **new** row in the lookup table and a
-line in *What I changed*. An earlier draft asked the consultant whether to add
+line in the hand-over report. An earlier draft asked the consultant whether to add
 it, rename one, or route on Service instead: three options with one obvious
 answer, which is a question that should never have been asked.
 
 **The missing metric source was asked, because it has no answer.** Nothing on
 Order marks a return. This is not a mechanism question for the engineer, it is a
-business question about what the client means by RMA, and only the consultant can
-answer it. Note the phrasing — what should it count, not which field should we
-create — and note that it still ships with a default applied, so the document is
-complete either way.
+business question about what the client means by RMA, and only the consultant
+can answer it. Note the phrasing — what should it count, not which field should
+we create — and note where it was asked: in the chat, with three options and a
+recommendation, before the document existed. The document itself carries no
+trace of it.
 
 **The columns are in the objects file and the steps do not repeat them.** Step 4
 says a mini page with four fields; it does not list their types. Step 3 names

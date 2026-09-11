@@ -10,7 +10,7 @@
       "name": "creatio-demo-scenario-writer",
       "source": "./",
       "description": "Consultant's free-form demo scenario to a presentable scenario plus a buildable object model",
-      "version": "2.1.0"
+      "version": "2.2.0"
     }
   ]
 }

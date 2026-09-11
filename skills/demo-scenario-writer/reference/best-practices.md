@@ -78,7 +78,7 @@ user and the agent: what the user asks or clicks, and what the agent returns.
 An open question costs the consultant's attention and makes the document look
 unfinished. Raise one only when the answer **changes what gets built** and you
 cannot derive it. The categories below have exactly one correct answer. Decide
-them, write the decision into the objects file and into *What I changed*, and
+them, write the decision into the objects file, report it at hand-over, and
 move on.
 
 **A missing lookup value.** The scenario needs a value the lookup does not have?
