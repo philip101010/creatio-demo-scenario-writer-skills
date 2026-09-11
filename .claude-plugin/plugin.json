@@ -1,6 +1,6 @@
 {
   "name": "creatio-demo-scenario-writer",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "displayName": "Creatio Demo Scenario Writer",
   "description": "Rewrite a solution consultant's free-form Creatio demo scenario into two files: a narrative scenario they present from - their use cases, split into phases, with narration in bubbles and every on-screen value carrying its provenance - and an object-model file a coding agent builds from. Closes the step-logic gaps by asking before writing, and loses no detail of the source.",
   "author": {

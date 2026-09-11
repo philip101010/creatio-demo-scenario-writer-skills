@@ -1,12 +1,13 @@
 # Golden use case
 
 One worked example, both files. Read it before writing, match its density, then
-forget its content — copy the shape, the chain length, the ratio of bubble to
-step, never the domain.
+forget its content — copy the shape, the length of a step, the ratio of bubble
+to step, never the domain.
 
 It comes from a real scenario, verified against the general snapshot. Two
 verifications failed: one became a row in the objects file, the other became the
-one open question. Which is which is the whole lesson.
+one question asked in the chat before any of this was written. Which is which is
+the whole lesson.
 
 The consultant's original text for this use case is at the bottom, so you can
 see what the rewrite actually did to it.
@@ -158,10 +159,11 @@ most often destroys by improving it.
 
 **Every value on screen got a provenance marker, and that is where the work
 was.** The consultant wrote "agent sees who it is straight away". Who resolved
-the caller? *(resolved from Mobile phone by the CTI emulator)* — a Tier A
-check 5 question that took one answer and turned three build items visible:
-Mobile phone must be populated, the emulator must be configured, and the seed
-contact's number must match. "How many times they've called us" is
+the caller? *(resolved from Mobile phone by the CTI emulator)* — a silent
+mechanism, check 7, so it was decided rather than asked, and deciding it made
+three build items visible at once: Mobile phone must be populated, the emulator
+must be configured, and the seed contact's number must match. The decision is
+one line in the hand-over report. "How many times they've called us" is
 *(calculated by the rule)*, so it is a rule to build; NPS and Champion are
 *(seeded)*, so they are rows in the seed table. Nothing on screen is unexplained.
 

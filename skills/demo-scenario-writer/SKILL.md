@@ -32,10 +32,11 @@ vocabulary and the numbers the story hangs on move into the narration bubbles
 nearly intact. A rewrite that improves the consultant's phrasing into house
 style has deleted the thing they wrote the scenario for.
 
-And one thing that is not negotiable: **ask before you write.** Everything that
-does not hold together gets asked, in one message, before the document exists —
-never resolved by a plausible guess. That is the gate this skill is built
-around.
+And one thing that is not negotiable: **the gate closes before you write.**
+Everything that breaks the logic, the consistency or the order of the steps is
+asked in one message before the document exists, with options to pick from.
+Everything else you decide yourself and report at hand-over. What never happens
+is a plausible guess going into a step with nobody told about it.
 
 ## Read these before writing
 

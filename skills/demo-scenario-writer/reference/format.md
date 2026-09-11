@@ -36,8 +36,8 @@ v<n> · <date> · <N> use cases
 No purpose section, no goals, no brief summary, no attachments, no closing
 notes, no object tables, no acceptance table, **no questions and no record of
 what you changed**. The document is the resolved demo. Everything you decided
-and everything you asked is reported in the conversation instead — see section 7,
-and `question-gate.md`.
+and everything you asked is reported in the conversation instead — see
+section 7 and `question-gate.md`.
 
 ---
 
