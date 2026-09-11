@@ -3,16 +3,15 @@
 The consultant handed you a scenario. Before you write a single line of the
 rewrite, you close the questions that would otherwise be answered by guessing.
 
-The gate has three tiers, and **the order between them is the point of this
+The gate has two tiers, and **the order between them is the point of this
 file**:
 
-| | Tier A — structure | Tier B — content | Tier C — priority |
-|---|---|---|---|
-| About | whether the steps hold together | what the records are called | what is in scope |
-| Changes | the shape of the document | values inside a fixed shape | nothing in the document |
-| Asked | first, before writing | last, with the draft delivered | last, with the draft delivered |
-| Blocking | yes | no — every item carries its default | no, but nothing may be left blank |
-| Decided by | you, mostly | you, mostly | the consultant, always |
+| | Tier A — structure | Tier B — content |
+|---|---|---|
+| About | whether the steps hold together | what the records are called |
+| Changes | the shape of the document | values inside a fixed shape |
+| Asked | first, before writing | last, with the draft delivered |
+| Blocking | yes | no — every item carries its default |
 
 Tier A questions add steps, split steps, re-attribute them to another actor and
 move phase boundaries. Tier B questions swap "Contoso Motors" for the real
@@ -162,66 +161,6 @@ Every one of them carries a default in the draft — placeholder names that read
 as placeholders, a stated currency, emulated integrations. Nothing here blocks
 delivery. A Tier B question that turns out to change the structure was a Tier A
 question you misfiled; move it and re-ask.
-
----
-
-## Tier C — the prioritisation interview
-
-The scenario's last section is *Basis vs. nice-to-have* (`format.md` section 6),
-and it is the one part of the document you may not decide. What is basis is a
-commercial position: it says what the customer is buying. Guess it and the
-generous half gets built, presented, and then quoted as if it had always been
-included.
-
-So you draft the table and interview the consultant on it. In the same message
-as Tier B, after the draft is delivered.
-
-**Draft it with the removal test.** For each capability, take it out of the
-scenario and look at what breaks:
-
-- a step stops working → **Basis**
-- every step still runs and only a bubble's claim gets smaller → **Nice-to-have**
-- it turns on a decision the customer has not taken → **Open — `<who>` to decide**
-
-That test is mechanical, which is what makes a draft legitimate rather than an
-invention. Put the one-line reason in *Note*, in their terms — "matrix already
-exists, enforcement is the gap" — not in yours.
-
-**Then ask, row by row, in one message:**
-
-```
-The last section is a first pass at scope. Flip anything I have wrong — these
-are your calls, not mine:
-
-  Basis        Calculation-to-document generation (UC1)
-               — the two pain points you opened the call with
-  Basis        Approval matrix enforcement by order value (UC3)
-               — the matrix exists, enforcement is the gap
-  Open         Hard stop on an unapproved issue (UC4)
-               — needs a J-Tec decision; who owns it?
-  Nice-to-have Customer portal
-               — you parked it for a later phase
-
-Three things I need from you: which rows are wrong, who decides each Open one,
-and whether anything the scenario shows is missing from the list.
-```
-
-**What you never do here:**
-
-- **Never quantify.** No euros, no man-days, no effort estimates. The section's
-  own intro line says the commercial team owns the €/time impact, and that is
-  not modesty — a number you invent becomes a number someone quotes.
-- **Never leave a cell blank.** An item the consultant will not classify is
-  `Open — <who> to decide`. A blank is the same defect as a highlighted doubt in
-  the prose: nobody owns it.
-- **Never overrule them.** If they call something basis that your removal test
-  says is decoration, it is basis. Their reason may be a commitment already made
-  on a call you were not on.
-- **Never promote something to basis because it is already built.** The demo
-  instance having a feature says nothing about whether the customer is buying it.
-
-Their answers replace your draft verbatim, and the objects file marks every
-nice-to-have item so the build order is obvious to whoever picks it up.
 
 ---
 
