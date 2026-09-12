@@ -1,13 +1,14 @@
 # Output format — the contract
 
-Two files come out of this skill, and the split is the whole idea:
+Three files come out of this skill, and the split is the whole idea:
 
 | File | Reader | Holds |
 |---|---|---|
 | `<client>-demo-scenario-v<n>.md` | the consultant, presenting | the narrative: use cases, phases, bubbles, steps |
-| `<client>-objects-v<n>.md` | Claude Code, building | the data model and the seed data — see `objects-file.md` |
+| `<client>-objects-v<n>.md` | Claude Code, building | what to add or change on the stand, and the seed data — see `objects-file.md` |
+| `<client>-processes-v<n>.md` | Claude Code, and the engineer at the Case Designer | stage models, processes, rules, AI skills, integrations — see `processes-file.md` |
 
-Nothing appears in both. The scenario names an object or a value only where a
+Nothing appears in more than one. The scenario names an object or a value only where a
 step actually shows it on screen; what to configure lives in the objects file.
 This is why the scenario stays short enough to be read in a meeting and the
 objects file stays complete enough to be handed to a coding agent without a
@@ -317,25 +318,26 @@ Reject your own draft if it contains any of these, and rewrite:
 
 ## 8. Delivery
 
-Two Markdown files, UTF-8, in the working directory:
+Three Markdown files, UTF-8, in the working directory:
 
 ```
 <client>-demo-scenario-v<n>.md
 <client>-objects-v<n>.md
+<client>-processes-v<n>.md
 ```
 
-Lower case, hyphens for spaces — `contoso-motors-demo-scenario-v1.md`. Both
-files carry the same version, and a revision after the consultant's comments
-increments both together even if only one changed, so a pair on disk is always a
-matching pair. Never overwrite the previous version; the consultant compares
+Lower case, hyphens for spaces — `contoso-motors-demo-scenario-v1.md`. All three
+carry the same version, and a revision after the consultant's comments
+increments all of them even if only one changed, so a set on disk is always a
+matching set. Never overwrite the previous version; the consultant compares
 them.
 
 Markdown only, and only this much of it: `#` for the title, `##` for the
 sections and use cases, `###` for phases, `>` for bubbles, numbered lists for
 steps, `-` for every other list, `**bold**` for element and value names,
 `*italic*` for the flow line and provenance, backticks for a name that could be
-read as prose. No pipe tables at all in this file — every table belongs in the
-objects file.
+read as prose. No pipe tables at all in this file — tables belong in the other
+two.
 
 No raw HTML, no images, no footnotes, no colour, no highlighting. A doubt that a
 highlight would have carried is an open question with a default — the only form

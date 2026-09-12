@@ -1,6 +1,6 @@
 # Golden use case
 
-One worked example, both files. Read it before writing, match its density, then
+One worked example, all three files. Read it before writing, match its density, then
 forget its content — copy the shape, the length of a step, the ratio of bubble
 to step, never the domain.
 
@@ -48,15 +48,15 @@ one screen → a case is registered without leaving it*
 
 ---
 
-## In the objects file
+## In the object model
 
 ### Contact — existing (OOTB), section "Contacts"
 
 | Column | Caption | Type | Status | Used by |
 |---|---|---|---|---|
-| MobilePhone | Mobile phone | Text | existing | UC1 s2 |
-| AccountId | Account | Lookup → Account | existing | UC1 s5 |
-| labNps | NPS | Integer 0–10 | **new** | UC1 s3 |
+| MobilePhone | Mobile phone | Text | existing (OOTB) | UC1 s2 |
+| AccountId | Account | Lookup → Account | existing (OOTB) | UC1 s5 |
+| labNps | NPS | Integer 0–10 | existing (instance) | UC1 s3 |
 | labHappinessRank | Happiness rank | Integer 1–10, slider | **new** | UC1 s3 |
 | labChampion | Champion | Boolean | **new** | UC1 s3 |
 | labIncomingCalls | Incoming calls | Integer, calculated | **new** | UC1 s3 |
@@ -65,16 +65,9 @@ one screen → a case is registered without leaving it*
 
 | Value | Status |
 |---|---|
-| Incident | existing |
-| Service request | existing |
+| Incident | existing (OOTB) |
+| Service request | existing (OOTB) |
 | Information request | **new** |
-
-### Logic to build
-
-- **Business rule** on Contact: **Incoming calls** = count of Call where
-  **Contact** = this contact and **Direction** = "Incoming". `Call.DirectionId`
-  is an existing lookup with "Incoming" present, so no new lookup. Serves UC1 s3
-  *(calculated by the rule)*.
 
 ### Seed data
 
@@ -82,7 +75,25 @@ one screen → a case is registered without leaving it*
 |---|---|---|---|---|---|
 | Tiffany Jane Martin | Deloitte Germany | +49 151 2233445 | 8 | yes | 3 incoming |
 
-### The one question, asked in the chat before any of this was written
+---
+
+## In the processes file
+
+### Incoming calls on Contact
+
+```
+Lives on: Contact (entity-level)
+Effect:   **Incoming calls** = count of Call where Contact = this contact
+          and Direction = "Incoming"
+Serves:   UC1 s3 *(calculated by the rule)*
+```
+
+`Call.DirectionId` is an existing lookup with "Incoming" present, so no new
+lookup — that fact lives in the object model, and this line does not repeat it.
+
+---
+
+## The one question, asked in the chat before any of this was written
 
 ```
 A1 · the RMA count on the KYC tab — nothing to count it from
@@ -161,7 +172,18 @@ we create — and note where it was asked: in the chat, with three options and a
 recommendation, before the document existed. The document itself carries no
 trace of it.
 
-**The columns are in the objects file and the steps do not repeat them.** Step 4
+**The columns are in the object model and the steps do not repeat them.** Step 4
 says a mini page with four fields; it does not list their types. Step 3 names
 the three metrics it shows on screen and no others. The KYC tab's full field
-list lives in the objects file, once.
+list lives in the object model, once.
+
+**The rule is in the processes file, not with the column it fills.** `Incoming
+calls` appears twice across the set and means something different each time: in
+the object model it is a column to create, in the processes file it is a rule to
+build. A build reads one file to know what exists and the other to know what
+moves, and a demo where the columns are right and nothing moves is the more
+common of the two failures.
+
+**NPS was already on the stand.** The instance read found `labNps` from an
+earlier build, so it is `existing (instance)` rather than **new** — one row that
+stops the build recreating a column and orphaning the seeded values behind it.
