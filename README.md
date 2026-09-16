@@ -1,4 +1,4 @@
-# Creatio Demo Scenario Writer
+# Creatio Demo Scenario Writer Skills
 
 A Claude Code plugin with one skill: it turns a solution consultant's free-form
 demo notes into the single document a solution engineer builds a Creatio demo
@@ -22,8 +22,8 @@ exists to remove.
 ## Install
 
 ```
-/plugin marketplace add philip101010/creatio-demo-scenario-writer
-/plugin install creatio-demo-scenario-writer
+/plugin marketplace add philip101010/creatio-demo-scenario-writer-skills
+/plugin install creatio-demo-scenario-writer-skills
 ```
 
 Then just hand Claude the notes — the skill triggers on demo notes, a client

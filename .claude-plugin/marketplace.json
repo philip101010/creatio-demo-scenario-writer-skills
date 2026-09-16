@@ -1,5 +1,5 @@
 {
-  "name": "creatio-demo-scenario-writer",
+  "name": "creatio-demo-scenario-writer-skills",
   "owner": {
     "name": "Philip Shatunov SE @Creatio",
     "email": "f.shatunov@creatio.com"
@@ -7,7 +7,7 @@
   "description": "Creatio presales scenario authoring",
   "plugins": [
     {
-      "name": "creatio-demo-scenario-writer",
+      "name": "creatio-demo-scenario-writer-skills",
       "source": "./",
       "description": "Consultant's free-form demo scenario to a presentable scenario, an object model and a process spec",
       "version": "3.0.0"
