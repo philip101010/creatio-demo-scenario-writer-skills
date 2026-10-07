@@ -43,7 +43,7 @@ Exit codes
   0  verified: it exists in this snapshot
   1  NOT verified: it is absent, or present but empty in this snapshot.
      Either way you may not write it down as existing. Mark it as new in the
-     objects file, or ask.
+     objects file, or flag it as a proposal.
      For `check`, 1 means at least one item of the list was not verified.
   2  usage error (bad or missing argument)
 """

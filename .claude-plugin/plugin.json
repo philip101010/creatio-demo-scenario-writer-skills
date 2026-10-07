@@ -1,8 +1,8 @@
 {
   "name": "creatio-demo-scenario-writer-skills",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "displayName": "Creatio Demo Scenario Writer Skills",
-  "description": "Rewrite a solution consultant's free-form Creatio demo scenario into three files: a narrative scenario they present from, an object model of what to add or change on the demo stand, and the stage models, processes and rules that make it move. Reads the existing instance first so the build is told what is already there. Closes the step-logic gaps by asking before writing, and loses no detail of the source.",
+  "description": "Turn a solution consultant's Creatio demo case — notes, a scenario or discovery material — into two files: a narrative scenario they present from, and an object model with pages and seed data for the build agent. Writes everything in one pass, closes every gap in the step logic with the best-fitting step and hands it over as numbered proposals instead of questions, reads the existing instance first, then revises both files from the consultant's feedback. Loses no detail of the source.",
   "author": {
     "name": "Philip Shatunov SE @Creatio",
     "email": "f.shatunov@creatio.com"

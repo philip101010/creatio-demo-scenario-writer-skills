@@ -1,6 +1,8 @@
 # The object model file — written for a coding agent
 
-`<client>-objects-v<n>.md` is the second deliverable. Its reader is not a person
+`<client>-objects-v<n>.md` is the second deliverable, and the last: there is no
+processes file. Automation is carried by the scenario's steps and provenance
+markers, and the build agent derives it from them. Its reader is not a person
 skimming in a meeting: it is Claude Code, opening the file as the build brief for
 the demo, with the scenario file open beside it.
 
@@ -186,6 +188,13 @@ naming them. If a step shows a total, the rows that add up to it are here.
 Every record any use case needs exists here in that use case's opening state,
 which is what lets a use case run on its own without another one having been run
 first.
+
+These rows are also the state the **Run before demo** reset restores, which the
+scenario's *Before you present* line points at. State beside the tables which
+records the demo creates or changes while it runs, so the build agent can write a
+reset that restores the seeded ones and removes only those — every delete
+filtered by `Created on = today` or an explicit list of record numbers, never
+unfiltered. A demo that cannot be run twice cannot be rehearsed.
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: demo-scenario-writer
-description: Rewrite a solution consultant's free-form Creatio demo scenario into three files — a narrative scenario they present from, an object model of what to add or change on the demo stand, and the processes, stage models and rules that make it move. Reads the existing instance first, so the build is told what is already there rather than rebuilding it. Closes the step-logic gaps by asking before writing, never by guessing. Use when someone provides a demo scenario, demo notes, a client call summary, use cases in free form or a scenario docx for a Creatio demo and wants it reformatted, checked, or turned into a build-ready scenario.
+description: Turn a solution consultant's Creatio demo case — their own scenario, free-form notes, a client call summary, or discovery material with no use cases yet — into two build-ready files: a narrative scenario they present from, and an object model of what to add or change on the demo stand, pages included. Writes the whole thing itself in one pass, closes every gap in the step logic with the best-fitting step or decision, and hands the result over as proposals the consultant accepts or changes — it does not ask questions first. Reads the existing instance so the build is told what is already there. Then revises both files from the consultant's feedback. Use when someone provides a demo scenario, demo notes, a client call summary, use cases in free form, discovery documents or a scenario docx for a Creatio demo and wants it written, reformatted, checked, turned into a build-ready scenario, or revised after review.
 ---
 
 # Demo scenario writer
@@ -10,80 +10,87 @@ description: Rewrite a solution consultant's free-form Creatio demo scenario int
 A solution consultant writes their demo in free form: use cases one after
 another, business language, in whatever order the client call went. It is
 readable by them and by nobody else. The engineer cannot build from it and
-neither can a coding agent.
+neither can a coding agent. Sometimes there is not even that — only the
+discovery documents, and the use cases still have to be found in them.
 
-You turn it into three files — a scenario the consultant presents from, an
-object model of what to add or change on the stand, and the processes, stage
-models and rules that make the demo move — without losing a detail of what they
-wrote, without redesigning their use cases, and without quietly inventing the
-answers to the questions their text left open.
+You turn it into two files — a scenario the consultant presents from, and an
+object model of what to add or change on the stand, with the pages it needs —
+without losing a detail of what they wrote and without making them answer
+anything before they have something to read. Processes, stage models, rules and
+AI skills are not written down: the step descriptions carry them, and the build
+agent derives them from the provenance markers.
 
-The three split the way the work does. The consultant reads one document and
-never the other two. The build reads the object model to know what to create,
-and the processes file to know what makes it run — and those fail differently
-enough that mixing them buries the stage model under column tables.
+The consultant's job is to **review**, not to specify. You write the whole
+thing, you close every gap with the step you judge fits best, you say plainly
+which parts are yours, and they change what they disagree with. Then you issue
+the next version.
+
+The two files split the way the work does. The consultant reads the scenario and
+never the object model. The build agent reads the scenario for what happens and
+what produces it, and the object model for what to create.
 
 ## The three things that decide everything
 
 **Nothing is lost.** Every sentence of the source lands somewhere and you can
 say where. A sentence you deliberately left out is reported with its reason.
-This is a rewrite, not a summary — see `reference/question-gate.md`, *Coverage*.
+This is a rewrite, not a summary — see `reference/gap-closing.md`, *Coverage*.
 
-**Their structure survives.** The use cases are theirs: same count, same order,
-same numbers. A long one gets phases. You are making their scenario legible, not
-proposing a better one.
+**Their structure survives.** When the consultant wrote use cases, those are
+theirs: same count, same order, same numbers. A long one gets phases. You are
+making their scenario legible, not proposing a better one.
 
 **Their voice survives.** The pain points, the value language, the client's own
 vocabulary and the numbers the story hangs on move into the narration bubbles
 nearly intact. A rewrite that improves the consultant's phrasing into house
 style has deleted the thing they wrote the scenario for.
 
-And one thing that is not negotiable: **the gate closes before you write.**
-Everything that breaks the logic, the consistency or the order of the steps is
-asked in one message before the document exists, with options to pick from.
-Everything else you decide yourself and report at hand-over. What never happens
-is a plausible guess going into a step with nobody told about it.
+And one thing that is not negotiable: **a gap is closed by you, visibly.** Every
+hole in the logic, the consistency or the order of the steps gets the
+best-fitting step or decision written in, and a numbered proposal in the
+hand-over saying what was missing, what you wrote, and how to undo it. What
+never happens is a plausible guess going into a step with nobody told — and
+what also never happens is the consultant being asked to choose before there is
+a draft to react to.
 
 ## Read these before writing
 
 1. `reference/format.md` — the document contract. Non-negotiable.
-2. `reference/question-gate.md` — what to ask, in which order, and how.
-3. `reference/objects-file.md` — the object model, written for Claude Code, and
-   how to read the instance before writing it.
-4. `reference/processes-file.md` — the stage models, processes and rules.
-5. `reference/golden-use-case.md` — one worked example, with the consultant's
+2. `reference/gap-closing.md` — the gap checks, how to pick the closing step,
+   and how proposals are written.
+3. `reference/objects-file.md` — the object model with its pages, written for
+   Claude Code, and how to read the instance before writing it.
+4. `reference/golden-use-case.md` — one worked example, with the consultant's
    original text beside it. Match its density.
-6. `reference/best-practices.md` — what you may specify, what you may not, and
-   what to decide instead of asking.
-7. `reference/anti-examples.md` — real failures and their fixes.
+5. `reference/best-practices.md` — what you may specify, what you may not, and
+   what to decide.
+6. `reference/anti-examples.md` — real failures and their fixes.
 
 ---
 
-## Two modes
+## Two inputs, one flow
 
-**Rewrite mode** — the consultant drops a finished or half-finished scenario in
-and asks for it to be reformatted or checked. This is the flow below, and it is
-the mode this skill currently implements.
+Decide the input from what arrived, never by asking:
 
-**Co-writing mode** — the consultant drops in client context (files, a call
-transcript, a deck) and starts inventing use cases out loud, one at a time,
-phase by phase, while you build the scenario alongside them and keep it current
-after every addition. Not yet specified. If a consultant asks for it, say the
-skill does the rewrite properly today and offer to work through their use cases
-one by one into the same format by hand.
+**The consultant wrote use cases** — a finished or half-finished scenario, notes
+in demo order, a docx. Their use cases are the skeleton. Go to Step 1.
 
-Decide the mode from what arrived, not by asking: a scenario in the message is
-rewrite mode; client material with no use cases yet is co-writing.
+**There are no use cases yet** — a call transcript, a requirements summary, a
+deck, client material. Step 1 starts by drafting them (Step 1b). The set you
+propose is itself the first proposal in the hand-over, and the consultant may
+reshape it freely in the revision.
+
+The rest of the flow is the same. Either way the consultant sees a complete
+draft before they are asked for anything.
 
 ---
 
-## Rewrite mode — the flow
+## The flow
 
 ### Step 1 — Map the source
 
-Read the whole scenario before touching anything. Then tag every sentence with
-where it will land — step, bubble, object, flow line, header, question, or
-dropped-with-a-reason. `question-gate.md`, *Coverage*, has the tag list.
+Read the whole source before touching anything. Then tag every sentence with
+where it will land — step, bubble, object, flow line, header, proposal, or
+dropped-with-a-reason. `gap-closing.md`, *Coverage*, has the tag list.
 
 This is working material, not a deliverable. Its purpose is that by the end of
 the job you can answer "where did my third paragraph go" without re-reading
@@ -92,38 +99,52 @@ their file.
 Two things surface here for free: the use case boundaries the consultant already
 drew, and the sentences that are narration rather than action. Keep both.
 
-### Step 2 — Run the ten logic checks
+### Step 1b — Draft the use cases (only when there are none)
 
-Walk `question-gate.md` Tier A over the mapped source. Ten things fire; only six
-of them earn a question, and the line is sharp: **you ask only about the logic,
-the consistency and the order of the steps.** Orphan preconditions, dead
-results, actor jumps, impossible order, contradictions, unreachable pages.
+From discovery material, find the demo the client actually asked for.
 
-The other four — silent mechanisms, phase boundaries, two readings, unexplained
-terms — you resolve, write into the step, and report at hand-over.
+- Take the client's own words for what hurts and what they want to see. Those
+  become the bubbles later.
+- Three to five use cases; a slot is short. Order them so the story builds and
+  the strongest moment lands before attention drops, not last.
+- Each one is anchored to a stated pain or request in the material, and has one
+  visible payoff. A use case you cannot anchor to the material does not go in.
+- Say in the hand-over what you took as the decision the audience must make, and
+  which use case carries the moment that lands it. That sentence replaces the
+  goal interview: you state your reading and the consultant corrects it.
+
+Treat the resulting use cases as the consultant's text from here on, and apply
+the same checks to them.
+
+### Step 2 — Close the gaps
+
+Walk `gap-closing.md` over the mapped source. Ten things go wrong in a free-form
+scenario; **all ten are closed by you**. Six affect whether the steps hold
+together (orphan precondition, dead result, actor jump, impossible order,
+contradiction, unreachable page) and four are resolved in passing (silent
+mechanism, phase boundary, two readings, unexplained term).
+
+For every hit, pick the closing step by the ranking in `gap-closing.md`: keep
+their text when it is viable, otherwise the smallest change that makes the
+logic hold, built from mechanisms on the `best-practices.md` white list. Write
+it straight into the scenario and keep a record: where, what was missing, what
+you wrote, and the one-line undo. That record becomes the proposals list in the
+hand-over.
 
 **Silent mechanism is the one to watch.** A result with no stated cause is the
 defect that survives every review and then fails in the room, and it fires more
 often than everything else combined. Name the mechanism from
 `best-practices.md` section 1, write the provenance marker, carry it into the
-objects file — do not ask. The consultant left it out because they do not know
-what produced it either.
+objects file. The consultant left it out because they do not know what produced
+it either.
 
-### Step 3 — Ask Tier A, once, with options
+If a gap has no answer anywhere in the source — the metric has no source, the
+term means something only the client knows — do not stop. Close it with the
+cheapest honest version (leave the metric off, use a labelled placeholder),
+mark the proposal **needs your input**, and carry on. A draft that is missing
+one thing is still a draft.
 
-One message, numbered, before a line of the document exists. Every question
-names what it blocks, quotes their own words back, and offers **two to four
-concrete options** — one of them marked as recommended, each with half a line on
-what it costs elsewhere in the scenario. Include the option that keeps their
-text as written whenever it is viable.
-
-If you cannot name two concrete resolutions, it is not a question yet: you have
-not understood the ambiguity well enough to ask about it.
-
-Say that anything unanswered goes with the recommendation. Wait once. Then
-proceed — do not stall and do not chase.
-
-### Step 4 — Read the instance
+### Step 3 — Read the instance
 
 A demo is almost never built on an empty stand, and the expensive mistake is
 rebuilding what is already there. Before writing the object model, look at the
@@ -156,8 +177,9 @@ tell you that: it is out-of-the-box only.
 say so in the object model header, mark every non-OOTB row `existing (instance,
 unverified)`, and report it at hand-over. Never promote a consultant's claim to
 a verified fact; distinguishing the two is the whole point of the state column.
+An unreachable stand does not stop the draft.
 
-### Step 5 — Verify every name against the snapshot
+### Step 4 — Verify every name against the snapshot
 
 Collect every object, field, lookup and lookup value the files will assert as
 out-of-the-box, one per line, and check the list in a single call:
@@ -198,18 +220,20 @@ Never open the tables in `assets/` yourself, and never open the xlsx in
 `snapshots/` — that is the maintainer's source, 36 000 rows of it.
 
 Then check every mechanism against `best-practices.md` section 1. A mechanism
-not on that list is a question for the engineer, not an assumption.
+not on that list is written as the closest listed one and carried as a proposal
+flagged **engineer to confirm** — never silently assumed.
 
-### Step 6 — Write the three files
+### Step 5 — Write the two files
 
-The scenario holds no questions and no record of what you changed. It is the
-resolved demo, written to the answers from Step 3.
+The scenario holds no questions, no proposal markers and no record of what you
+changed. It is the resolved demo, with your proposals already written in.
 
-In one pass, in the exact structure of `format.md`, `objects-file.md` and
-`processes-file.md`. The scenario carries the narrative; the object model
-carries what to add or change and the seed data; the processes file carries the
-stage models, processes, rules, AI skills and integrations. **A fact appears in
-exactly one of the three.**
+In one pass, in the exact structure of `format.md` and `objects-file.md`. The
+scenario carries the narrative, and with it everything the build agent needs to
+know about automation: each step says what happens and, in its provenance
+marker, what produces it. The object model carries what to add or change —
+objects, columns, lookups, pages and details — and the seed data. **A fact
+appears in exactly one of the two.**
 
 Two cross-checks before delivering, both of which run in both directions:
 
@@ -217,39 +241,67 @@ Two cross-checks before delivering, both of which run in both directions:
   that put it on screen, and every field a step shows has a row. A column with
   no step is a column nobody asked for; a step with no row is a build item
   nobody will build.
-- **Provenance markers against the processes file.** Collect every marker in the
-  scenario that is not *(seeded)*. Each one has a line in the processes file
-  naming its step. A marker with no line is unbuilt automation; a line serving
-  no step is work nobody asked for.
+- **Provenance markers against the white list.** Collect every marker in the
+  scenario that is not *(seeded)*. Each names a mechanism from
+  `best-practices.md` section 1, and the step it sits in states the trigger and
+  the visible result well enough to build from. A marker with no mechanism is
+  automation nobody can build; a column that only a marker writes has to show
+  in the object model with that step in its *Used by*.
 
-### Step 7 — Hand over
+### Step 6 — Hand over
 
-In the conversation, not in the documents:
+In the conversation, not in the documents. In this order, short:
 
-- the three file paths;
-- use cases and step counts;
+- the two file paths, and use cases with step counts;
+- **Proposals** — every gap you closed, numbered `P1`, `P2`…, grouped as *steps
+  I added or changed*, *mechanisms I named*, and *defaults I applied* (client
+  names, numbers, currency, emulated integrations, branding, slot). Each is
+  three lines at most: where, what was missing and what you wrote, and what to
+  say to undo it. Anything the draft cannot settle by itself is marked **needs
+  your input** or **engineer to confirm**, and says what it blocks;
 - **what the instance read found** — what was already there, and anything the
   scenario assumed exists that does not. If the stand was unreachable, say so
   plainly and name what is therefore unverified;
 - the coverage residue — how many source sentences mapped, and every dropped one
   quoted with its reason;
-- the `check` result;
-- **what you decided** — the mechanisms you named where the source stated none,
-  and the wording you resolved, one line each. This is the deviation record, and
-  it belongs here rather than in the document, where the consultant can push
-  back on it while it is still cheap;
-- **Tier B** — one message of content questions, each with its default already in
-  the draft;
-Then one question, and nothing else: what to change.
+- the `check` result.
+
+Close with one line and nothing else: reply with what to change — by proposal
+number, by use case and step, or in your own words — and the next version
+follows. Do not add a questionnaire. The proposals are the questions, already
+answered with the best available answer.
+
+### Step 7 — Revise from feedback
+
+The consultant answers in whatever form they like: "P3 no, do it the other way",
+"UC2 step 5 is wrong, the manager sees it first", "make UC4 shorter", or a
+pasted new paragraph. Read all of it, then:
+
+1. Sort each comment into *accepted as proposed*, *changed*, *new content*, or
+   *cut*. A proposal the consultant did not mention stands; silence is
+   acceptance. A bare "no" on a proposal means apply its stated undo.
+2. Apply to **both files** and re-run Step 4 and the two Step 5
+   cross-checks — a change to a step moves columns and markers too.
+3. Issue `v<n+1>` of both, never overwriting the previous set. Step numbers
+   do not shift: a removed step leaves a gap, an added step takes the next free
+   number in its use case.
+4. Hand over the revision as a short change list mapping each comment to what
+   changed, and list any knock-on effects (a step that now needs a new column, a
+   marker with a new mechanism). A knock-on you had to close yourself is a new
+   numbered proposal, continuing the sequence.
+
+Then the same one line: reply with what to change. Repeat until they stop
+replying with changes.
 
 ---
 
 ## Hard rules
 
-1. **The use case count and order are the consultant's.** Never merge, never
-   split into new numbers, never renumber, never invent one. Long use cases get
-   phases.
-2. **Step numbers never shift**, across phases or revisions. A removed step
+1. **The use cases the consultant wrote keep their count, order and numbers.**
+   Never merge, never split into new numbers, never renumber, never invent one.
+   Long use cases get phases. Use cases you drafted from discovery material are
+   proposal P1 and may be reshaped freely in the revision.
+2. **Step numbers never shift** across phases or revisions. A removed step
    leaves a gap.
 3. **Every step ends on something visible on screen.** A step with nothing to
    look at belongs inside the one before it.
@@ -263,33 +315,39 @@ Then one question, and nothing else: what to change.
    cannot watch happen is written as them opening the place where its result
    shows. Every explaining sentence belongs to a bubble; arrows belong to the
    flow line and nowhere else.
-7. **A fact appears once**, in exactly one of the three files.
+7. **A fact appears once**, in exactly one of the two files.
 8. **No unverified assertion.** Object, field, lookup, value, mechanism —
-   checked against the snapshot, or decided by the rules, or asked.
-9. **Decide far more than you ask.** Check every candidate question against
-   `best-practices.md` section 2 first. Missing lookup values, missing simple
-   fields, licensing and standard admin operations are decided, not asked.
-10. **Every question is asked in the chat before the document exists**, with two
-    to four concrete options and one of them recommended. No question and no
-    deviation record ever appears in the document itself.
-11. **No GUIDs, no record Ids, no credentials** in any of the three files.
+   checked against the snapshot, or decided by the rules, or carried as a
+   flagged proposal.
+9. **Never ask; propose.** Do not put a question to the consultant before the
+   draft exists, and do not hand over a questionnaire with it. Every gap is
+   closed with the best-fitting step, recorded as a numbered proposal with its
+   one-line undo. A proposal may say **needs your input**, but the draft stands
+   without it.
+10. **No proposal, question or deviation record ever appears in either
+    file.** They are reported in the conversation, where they can be answered
+    while changing them is still free.
+11. **No GUIDs, no record Ids, no credentials** in either file.
 12. **Banned words** — `format.md` section 7. Check your own draft against the
     list before delivering.
 13. **Never quantify scope.** No money, no man-days, no effort estimates,
     anywhere.
 14. **Never mark something existing on the instance without having looked**, or
     having said that you could not.
-15. **Nothing outside the sections** the three contracts define.
+15. **Nothing outside the sections** the two contracts define.
+16. **Revisions are a new version of both files**, and the previous version
+    stays on disk.
 
 ## What good looks like
 
 A five-use-case scenario runs about 700–1 100 words of body text, with two to
 four bubbles per use case and no bubble narrating what the next step already
-shows. The objects file is as long as it needs to be; nobody skims it.
-
-The object model and the processes file are as long as they need to be; nobody
-skims them.
+shows. The object model is as long as it needs to be; nobody skims it.
 
 The test of the set is a colleague who was not on the client call: they read the
-scenario once and could present it, and a coding agent reads the other two and
-builds without asking a question.
+scenario once and could present it, and a coding agent reads both and builds
+without asking a question.
+
+The test of the hand-over is the consultant's first reply. If it is "fine,
+except P4 and P7", the draft was right. If it is a list of answers to things you
+should have decided, the proposals were too timid.

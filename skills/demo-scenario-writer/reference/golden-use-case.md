@@ -1,13 +1,12 @@
 # Golden use case
 
-One worked example, all three files. Read it before writing, match its density, then
+One worked example, both files. Read it before writing, match its density, then
 forget its content — copy the shape, the length of a step, the ratio of bubble
 to step, never the domain.
 
 It comes from a real scenario, verified against the general snapshot. Two
-verifications failed: one became a row in the objects file, the other became the
-one question asked in the chat before any of this was written. Which is which is
-the whole lesson.
+verifications failed: one became a row in the objects file, the other became a
+proposal in the hand-over. Which is which is the whole lesson.
 
 The consultant's original text for this use case is at the bottom, so you can
 see what the rewrite actually did to it.
@@ -59,7 +58,7 @@ one screen → a case is registered without leaving it*
 | labNps | NPS | Integer 0–10 | existing (instance) | UC1 s3 |
 | labHappinessRank | Happiness rank | Integer 1–10, slider | **new** | UC1 s3 |
 | labChampion | Champion | Boolean | **new** | UC1 s3 |
-| labIncomingCalls | Incoming calls | Integer, calculated | **new** | UC1 s3 |
+| labIncomingCalls | Incoming calls | Integer, calculated: count of Call where Contact = this contact and Direction = "Incoming" | **new** | UC1 s3 |
 
 ### CaseCategory — existing lookup
 
@@ -77,39 +76,21 @@ one screen → a case is registered without leaving it*
 
 ---
 
-## In the processes file
-
-### Incoming calls on Contact
+## The one gap with no answer in the text, as it was handed over
 
 ```
-Lives on: Contact (entity-level)
-Effect:   **Incoming calls** = count of Call where Contact = this contact
-          and Direction = "Incoming"
-Serves:   UC1 s3 *(calculated by the rule)*
-```
-
-`Call.DirectionId` is an existing lookup with "Incoming" present, so no new
-lookup — that fact lives in the object model, and this line does not repeat it.
-
----
-
-## The one question, asked in the chat before any of this was written
-
-```
-A1 · the RMA count on the KYC tab — nothing to count it from
+P2 · UC1 step 3 — the RMA count has no source
 You listed "RMA count" among the six metrics on the tab. Nothing on Order marks
-a return, and no existing column derives into one, so the metric has no source.
-
-  a) Leave it off the tab; five metrics instead of six.         ← recommended
-     Nothing else in the use case moves.
-  b) Count Orders with a credit note against them.
-     Needs a new column on Order and a rule to populate it.
-  c) Count it from something you track outside Creatio.
-     Tell me what, and it becomes an import plus a seeded number.
+a return, and no existing column derives into one.
+Wrote: the tab shows five metrics; RMA count is left off.
+Undo: say "P2: count orders with a credit note" and I add the column on Order
+and the rule that fills it, or "P2: it comes from outside Creatio" and it
+becomes an import plus a seeded number.
+Needs your input: what the client means by an RMA.
 ```
 
-Answered (a), so the tab holds five metrics and the document says nothing about
-the question ever having existed.
+The draft was complete without it — five metrics on the tab, no hole — and the
+consultant's first reply could be "fine" or a one-line correction.
 
 ---
 
@@ -164,25 +145,25 @@ line in the hand-over report. An earlier draft asked the consultant whether to a
 it, rename one, or route on Service instead: three options with one obvious
 answer, which is a question that should never have been asked.
 
-**The missing metric source was asked, because it has no answer.** Nothing on
-Order marks a return. This is not a mechanism question for the engineer, it is a
-business question about what the client means by RMA, and only the consultant
-can answer it. Note the phrasing — what should it count, not which field should
-we create — and note where it was asked: in the chat, with three options and a
-recommendation, before the document existed. The document itself carries no
-trace of it.
+**The missing metric source was proposed, not asked, because it has no answer.**
+Nothing on Order marks a return. This is not a mechanism question for the
+engineer, it is a business question about what the client means by RMA, and only
+the consultant can answer it — so the draft takes the cheapest honest version
+(leave it off), says so in the hand-over with the undo, and flags it **needs your
+input**. Note the phrasing — what should it count, not which field should we
+create. The document itself carries no trace of it.
 
 **The columns are in the object model and the steps do not repeat them.** Step 4
 says a mini page with four fields; it does not list their types. Step 3 names
 the three metrics it shows on screen and no others. The KYC tab's full field
 list lives in the object model, once.
 
-**The rule is in the processes file, not with the column it fills.** `Incoming
-calls` appears twice across the set and means something different each time: in
-the object model it is a column to create, in the processes file it is a rule to
-build. A build reads one file to know what exists and the other to know what
-moves, and a demo where the columns are right and nothing moves is the more
-common of the two failures.
+**The rule is a marker and a formula, not a third document.** `Incoming calls`
+is a calculated column in the object model, with its formula stated, and step 3
+says *(calculated by the rule)*. The build agent reads the marker for what
+produces the value and the object model for what to create — nothing else needs
+writing down, and a demo where the columns are right and nothing moves is
+caught by the marker-against-white-list check.
 
 **NPS was already on the stand.** The instance read found `labNps` from an
 earlier build, so it is `existing (instance)` rather than **new** — one row that

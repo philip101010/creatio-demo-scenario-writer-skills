@@ -1,23 +1,26 @@
 # Creatio Demo Scenario Writer Skills
 
-A Claude Code plugin with one skill: it turns a solution consultant's free-form
-demo notes into the single document a solution engineer builds a Creatio demo
-from — without a rewrite cycle.
+A Claude Code plugin with one skill: it turns a solution consultant's case — free-form
+notes, a scenario, or discovery material — into the two files a Creatio demo is
+presented and built from: a scenario, and an object model with its pages.
 
 ## What it does
 
-The consultant writes notes after a client call: free-form, out of order,
-business language, technically naive in places. The skill produces a scenario
-with modular use cases, one happy path each, and a build spec whose every
-object, field, lookup and lookup value has been checked against a bundled
-Creatio object-model snapshot.
+The consultant writes a case: notes after a client call, a scenario, or just
+discovery documents — free-form, out of order, business language, technically
+naive in places. The skill writes the whole thing in one pass: a scenario with
+modular use cases, one happy path each, and an object model whose every object,
+field, lookup and lookup value has been checked against a bundled Creatio
+object-model snapshot, with the pages and seed data to build. Automation —
+processes, stage models, rules, AI skills — is not a separate file: each step
+says what happens and what produces it, and the build agent derives the rest.
 
-What it will not do is invent functionality. Anything that cannot be verified
-against the snapshot and cannot be decided from the rules becomes an open
-question addressed to the person who can actually answer it — the consultant
-for business questions, the engineer for platform ones. Consultants are never
-asked platform questions, which is the technical guesswork this whole process
-exists to remove.
+It does not interrogate the consultant. Every gap in the step logic is closed
+with the best-fitting step, and handed over as a numbered proposal with a
+one-line undo. The consultant reads the draft, replies with what to change, and
+the skill issues the next version of both files. Anything that only a person can
+settle is flagged **needs your input** or **engineer to confirm** without
+stopping the draft.
 
 ## Install
 
@@ -26,17 +29,20 @@ exists to remove.
 /plugin install creatio-demo-scenario-writer-skills
 ```
 
-Then just hand Claude the notes — the skill triggers on demo notes, a client
-call summary, a draft demo script or a use-case description for a Creatio demo.
-It answers with an intake checklist, then delivers the scenario as one Markdown
-file named `<client>-demo-scenario-v<n>.md`.
+Then just hand Claude the case — the skill triggers on demo notes, a client
+call summary, discovery documents, a draft demo script or a use-case description
+for a Creatio demo. It delivers two Markdown files,
+`<client>-demo-scenario-v<n>.md` and `<client>-objects-v<n>.md`, plus a list of
+proposals in the chat. Reply with changes and it issues `v<n+1>` of both.
 
 ## What's inside
 
 ```
 skills/demo-scenario-writer/
-  SKILL.md                    the flow: intake, decompose, verify, write
-  reference/format.md         the document contract (five sections, banned words)
+  SKILL.md                    the flow: map, close gaps, read, verify, write, revise
+  reference/format.md         the scenario contract (steps, bubbles, provenance, banned words)
+  reference/objects-file.md   the object model contract (objects, lookups, pages, seed data)
+  reference/gap-closing.md    the ten gap checks, how to close them, how proposals are written
   reference/best-practices.md what to specify, what to decide instead of asking
   reference/golden-use-case.md one worked use case to match for density
   reference/anti-examples.md  real failures and their fixes

@@ -1,15 +1,17 @@
 # Output format — the contract
 
-Three files come out of this skill, and the split is the whole idea:
+Two files come out of this skill, and the split is the whole idea:
 
 | File | Reader | Holds |
 |---|---|---|
 | `<client>-demo-scenario-v<n>.md` | the consultant, presenting | the narrative: use cases, phases, bubbles, steps |
-| `<client>-objects-v<n>.md` | Claude Code, building | what to add or change on the stand, and the seed data — see `objects-file.md` |
-| `<client>-processes-v<n>.md` | Claude Code, and the engineer at the Case Designer | stage models, processes, rules, AI skills, integrations — see `processes-file.md` |
+| `<client>-objects-v<n>.md` | Claude Code, building | what to add or change on the stand — objects, lookups, pages, details — and the seed data; see `objects-file.md` |
 
 Nothing appears in more than one. The scenario names an object or a value only where a
 step actually shows it on screen; what to configure lives in the objects file.
+There is no file for processes, stage models, rules or AI skills: the build agent
+derives them from the steps and their provenance markers, which is why those two
+have to be exact.
 This is why the scenario stays short enough to be read in a meeting and the
 objects file stays complete enough to be handed to a coding agent without a
 covering explanation.
@@ -35,8 +37,8 @@ v<n> · <date> · <N> use cases
 No purpose section, no goals, no brief summary, no attachments, no closing
 notes, no object tables, no acceptance table, **no questions and no record of
 what you changed**. The document is the resolved demo. Everything you decided
-and everything you asked is reported in the conversation instead — see
-section 6 and `question-gate.md`.
+and everything you proposed is reported in the conversation instead — see
+section 6 and `gap-closing.md`.
 
 ---
 
@@ -65,8 +67,8 @@ Exactly one line:
 > Run the **Run before demo** process — it resets every record this demo touches
 > to its opening state.
 
-Not a checklist. The reset itself is a build artifact and is specified in the
-objects file, alongside the seed data it restores.
+Not a checklist. The reset itself is a build artifact: the build agent derives it from the seed
+data in the objects file, which defines the state it restores.
 
 ---
 
@@ -262,7 +264,7 @@ did, in italics, in parentheses:
 | *(created by the process)* | a business process wrote it during the demo |
 | *(calculated by the rule)* | a business rule or calculated field derived it |
 | *(from the CTI emulator)* | an integration or emulator supplied it |
-| *(set by the stage model)* | the DCM case moved it |
+| *(set by the stage model)* | a stage model moved it |
 | *(returned by the AI skill)* | Creatio.ai produced it |
 
 Two things fall out of this, which is why it earns a section of its own:
@@ -271,11 +273,16 @@ Two things fall out of this, which is why it earns a section of its own:
 audience sees the system doing the work rather than the presenter typing an
 answer they were always going to type.
 
-**For the engineer** it is the build list hiding inside the narrative. A step
-that says *(created by the process)* is a process to build; *(calculated by the
-rule)* is a rule; *(seeded)* is a row in the objects file. A result with no
-marker and no typing is a hole, and finding those holes is most of what the
-question gate does — see `question-gate.md`, check 5.
+**For the build agent** it is the whole automation spec, because there is no
+separate file for it. A step that says *(created by the process)* is a process to
+build; *(calculated by the rule)* is a rule or a calculated column;
+*(set by the stage model)* is a stage model; *(returned by the AI skill)* is a
+skill whose answer is the quoted exchange; *(seeded)* is a row in the objects
+file. So the step has to carry what a spec would: what starts it (the action or
+the record that changes), what it writes (the values that appear), and which
+place on screen shows the result. A result with no marker and no typing is a
+hole, and finding those holes is most of what gap closing does — see
+`gap-closing.md`, check 7.
 
 ---
 
@@ -294,12 +301,12 @@ would restate every step in a second column — the duplication that turns a
 live in the objects file's seed data, which is what makes a use case runnable
 without another use case having been run first.
 
-**No open questions, and no list of what you changed.** Both used to sit at the
-end of the document, and both were the wrong place for them. A question printed
-in a document is a question nobody answers — it is asked in the chat before the
-document exists, with options to pick from, and the document is written to the
-answer. What you changed relative to the consultant's text is reported in the
-same conversation, where they can push back on it while it is still cheap.
+**No open questions, no proposals, and no list of what you changed.** Both used
+to sit at the end of the document, and both were the wrong place for them. A
+question printed in a document is a question nobody answers. The gaps you closed
+are written into the steps and reported as numbered proposals in the hand-over,
+with a one-line undo each, where the consultant can push back on them while it
+is still cheap.
 
 ---
 
@@ -318,17 +325,16 @@ Reject your own draft if it contains any of these, and rewrite:
 
 ## 8. Delivery
 
-Three Markdown files, UTF-8, in the working directory:
+Two Markdown files, UTF-8, in the working directory:
 
 ```
 <client>-demo-scenario-v<n>.md
 <client>-objects-v<n>.md
-<client>-processes-v<n>.md
 ```
 
-Lower case, hyphens for spaces — `contoso-motors-demo-scenario-v1.md`. All three
+Lower case, hyphens for spaces — `contoso-motors-demo-scenario-v1.md`. Both
 carry the same version, and a revision after the consultant's comments
-increments all of them even if only one changed, so a set on disk is always a
+increments both even if only one changed, so a set on disk is always a
 matching set. Never overwrite the previous version; the consultant compares
 them.
 
@@ -336,12 +342,12 @@ Markdown only, and only this much of it: `#` for the title, `##` for the
 sections and use cases, `###` for phases, `>` for bubbles, numbered lists for
 steps, `-` for every other list, `**bold**` for element and value names,
 `*italic*` for the flow line and provenance, backticks for a name that could be
-read as prose. No pipe tables at all in this file — tables belong in the other
-two.
+read as prose. No pipe tables at all in this file — tables belong in the
+objects file.
 
 No raw HTML, no images, no footnotes, no colour, no highlighting. A doubt that a
-highlight would have carried is an open question with a default — the only form
-a question takes in this document.
+highlight would have carried is a proposal in the hand-over, already written into
+the step — a document holds no doubts.
 
 ---
 

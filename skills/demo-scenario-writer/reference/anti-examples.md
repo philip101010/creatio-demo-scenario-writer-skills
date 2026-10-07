@@ -59,10 +59,10 @@ provider configuration and feature enablement are never questions.
 
 > **Bad** — "Q · engineer. Which CTI provider is connected on POC-02, and does it write a missed call as a Call record?"
 
-> **Good** — header line: "Integrations · CTI emulator". Asked once, in Tier B, because the input mentioned calls.
+> **Good** — header line: "Integrations · CTI emulator". Stated as a default, and listed under *defaults I applied* at hand-over.
 
-If the input mentions calls, ask one question at intake: emulator or real
-telephony. Nothing about providers, nothing about what writes what.
+If the input mentions calls, default to the emulator and say so. Nothing about
+providers, nothing about what writes what.
 
 ---
 
@@ -72,7 +72,7 @@ telephony. Nothing about providers, nothing about what writes what.
 
 > **Bad** — "Nb RMAs (Orders of type Return)"
 
-> **Good** — "**Q1** · blocks the RMA count field, nothing else · What counts as an RMA for this client? The Order object carries no return or type column, so the metric has no source. · **Applied: the field is left off the tab.**"
+> **Good** — the tab shows five metrics, and the hand-over carries "**P2** · UC1 step 3 — what counts as an RMA for this client? Order carries no return or type column, so the metric has no source. Wrote: left off the tab. Needs your input."
 
 `sh scripts/model.sh object Order` lists 32 fields. None is a type. The line
 was written because it sounded right. Note the addressee: this is not a mechanism
@@ -118,11 +118,12 @@ use cases into two. Their count is theirs; the branch resolves inside it.
 
 > **Good** — the seed data in the objects file contains case CS-1041, category "Information request", status New, unassigned. UC4 starts from that record.
 
-This is Tier A check 1, orphan precondition, and the fix is almost always seed
+This is gap check 1, orphan precondition, and the fix is almost always seed
 data rather than a new step: every record a use case needs exists in the objects
 file in that use case's opening state. Only when the precondition cannot be
 seeded at all — it has to be *produced* on screen — does the use case genuinely
-depend on another, and then it is a question for the consultant.
+depend on another, and then the producing step is written in and reported as a
+proposal.
 
 ### 11. The same fact written twice
 
@@ -159,13 +160,13 @@ step is what turns 700 words into 7 000.
 
 > **Bad** — "Create order — BP that creates order (One or several orders?)" left highlighted in the middle of page 12.
 
-> **Good** — the question was asked in the chat before the document existed, with "one order" and "several orders" as options and one of them recommended. The step is written to the answer, and the document carries no doubt at all.
+> **Good** — the step is written with the more plausible reading, "one order", and the hand-over carries "P5 · UC3 step 6 — one order or several? Wrote: one. Undo: say 'P5: several' and the step creates one per branch." The document carries no doubt at all.
 
-A highlight, a bold aside or a bracketed doubt in the prose is not a question.
-Nobody owns it and nobody answers it — and a question printed in a deliverable is
-no better, which is why the document holds none. A question is a numbered item
-in the chat, with what it blocks, concrete options and a recommendation, asked
-while changing the answer is still free.
+A highlight, a bold aside or a bracketed doubt in the prose is not a proposal.
+Nobody owns it and nobody answers it — and a doubt printed in a deliverable is
+no better, which is why the documents hold none. A proposal is a numbered item
+in the chat, with what was missing, what you wrote and the one-line undo, so
+changing it is free.
 
 ### 16. Currency and localisation discovered mid-document
 
@@ -173,8 +174,8 @@ while changing the answer is still free.
 
 > **Good** — header lines "Base currency · RON" and "Languages · ro-RO, en-US — OOTB language pack only", with the setting change in the objects file.
 
-These are Tier B questions, and they ship with a default applied. If one
-surfaces as a paragraph inside a use case, it was never asked.
+These are defaults, and they ship applied and listed under *defaults I applied*.
+If one surfaces as a paragraph inside a use case, it was never settled.
 
 ### 17. Credentials in the document
 

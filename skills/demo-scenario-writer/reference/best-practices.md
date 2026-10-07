@@ -3,7 +3,7 @@
 You have no access to a demo environment. This file plus the object-model
 snapshot is your only ground truth. **A line in either deliverable that you
 cannot trace to this file or to `scripts/model.sh check` is not a line — it is a
-question.**
+flagged proposal.**
 
 Keep this file current. When the team learns a new limitation or adds a reusable
 block, it is edited here, not remembered.
@@ -75,11 +75,11 @@ user and the agent: what the user asks or clicks, and what the agent returns.
 
 ## 2. Decide, don't ask
 
-An open question costs the consultant's attention and makes the document look
-unfinished. Raise one only when the answer **changes what gets built** and you
-cannot derive it. The categories below have exactly one correct answer. Decide
-them, write the decision into the objects file, report it at hand-over, and
-move on.
+A question costs the consultant's attention and makes the draft look
+unfinished, so nothing is put to them as one. Every gap is decided by you and
+reported as a proposal. The categories below have exactly one correct answer:
+decide them, write the decision into the objects file, give them one line at
+hand-over, and move on.
 
 **A missing lookup value.** The scenario needs a value the lookup does not have?
 Add it. Write `(new value in existing lookup)` and name the value. Only if an
@@ -106,29 +106,35 @@ enabled on the stand. The demo stands carry every licence the team needs.
 
 **Standard administrative operations.** Rights reassignment, revoking a user's
 access, changing a business unit, deactivating a user, transferring record
-ownership — all standard. Never ask *how* to do them. What you may need to ask
-is the **expected end state**: which role gains what, which loses what, on which
-records. That is a business question for the consultant, phrased as an outcome,
-never as a choice of mechanism.
+ownership — all standard. Never ask *how* to do them. What you may need to
+settle is the **expected end state**: which role gains what, which loses what,
+on which records. Write the most plausible end state and propose it, phrased as
+an outcome, never as a choice of mechanism.
 
 **Telephony.** Never ask which CTI provider is connected or what it writes to the
-database. Ask once, in the intake checklist, whether the demo uses the CTI
-emulator or real telephony — and nothing further.
+database. Default to the CTI emulator, say so in the header, and list it under
+*defaults I applied* — nothing further.
 
-### What is still a real question
+### What still needs a person
+
+These are the cases where a proposal is flagged instead of settled. The draft is
+written anyway, with the cheapest honest version, and the flag says what it
+blocks.
 
 - **Business semantics.** Which region, which role, which rule, which threshold.
   The input says "assigned by region" without saying whose region.
 - **Expected end state** where two outcomes are both plausible and materially
   differ, and picking wrong means a rebuild.
 - **A capability absent from the snapshot with no cheap equivalent** — a field to
-  count that does not exist and cannot be derived. Engineer.
+  count that does not exist and cannot be derived. Leave it off or use the
+  nearest listed mechanism, and flag **engineer to confirm**.
 
 ### How to phrase what is left
 
-State what is unresolved, what it blocks, and who answers. One sentence of
-context, then the question. Never offer the engineer a menu of mechanisms; ask
-for the outcome and let them choose the mechanism.
+State what is unresolved, what you wrote instead, what it blocks, and who can
+settle it — **needs your input** for the consultant, **engineer to confirm** for
+the platform. Never offer the engineer a menu of mechanisms; state the outcome
+and let them choose the mechanism.
 
 ---
 
@@ -140,11 +146,11 @@ This list is why you can say no. Add to it whenever the team hits a new wall.
 - **A lookup cannot be filtered for one page only.** Restricting the records a
   lookup offers is an entity business rule and applies everywhere that lookup is
   used. Specify the rule and note that consequence in the same line — this is not
-  a question. It becomes a real question only when the same demo needs *different*
+  a question. It needs a flagged proposal only when the same demo needs *different*
   contents for that lookup on two different pages, which the rule cannot do.
 - **Mobile pages are more limited than web pages** — a separate component
   catalogue, and no handlers, validators or converters. Complex mobile logic is
-  a question for the engineer, not an assumption.
+  flagged **engineer to confirm**, not assumed.
 - **A user-visible caption in a multilingual demo must be a localisable string.**
   Every custom caption multiplies by the number of languages. If the header
   lists more than one language, say so in the objects file; it is a real cost.
@@ -153,7 +159,8 @@ This list is why you can say no. Add to it whenever the team hits a new wall.
 - **A total that is a sum of child records must be recalculated by the platform**,
   never typed. Say "recalculated from the branch lines, never entered manually".
 - **Renaming a lookup value changes it everywhere.** If the scenario needs the
-  old caption somewhere else in the same demo, that is a question.
+  old caption somewhere else in the same demo, propose a new value for the
+  other use and flag it.
 - **Never output a GUID or a record Id.** The engineer resolves every lookup by
   name. The snapshot carries no record Ids at all, so there is nothing to leak
   even by accident.
@@ -204,7 +211,7 @@ is present but empty there. The message tells you which — and for a lookup it
 says why, which matters: `too large (N rows)` means the lookup certainly HAS
 values and the export skipped them at the 500-row cap, so the answer is to have
 them read off the instance, not to treat the lookup as empty. Both outcomes mean the
-same thing for your draft: a question with a default, never a guess. A finding
+same thing for your draft: a flagged proposal with a default, never a guess. A finding
 from one snapshot
 never carries over to the other; the two models differ, sometimes sharply —
 `Order` and `Invoice` do not exist in the banking model at all, and
